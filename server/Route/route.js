@@ -1,0 +1,10 @@
+const express = require("express");
+const router = express.Router();
+const {getUsers,registerUser,SendOtp,AddCourse,loginUser,getCourse} = require("../Controllers/path");
+router.route("/users").get(getUsers);
+router.route("/register/user").post(registerUser);
+router.route("/login/user").post(loginUser);
+router.route("/SendOtp").post(SendOtp);
+router.route("/course").get(getCourse);
+router.route("/add/course").post(AddCourse);
+module.exports = router;
