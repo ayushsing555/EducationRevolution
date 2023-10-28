@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import   {useNavigate} from 'react-router-dom';
 import { validEmail } from '../Component/ValidEmail';
-const Signin = () => {
+const Signin = ({functionCall}) => {
     const router = useNavigate();
     const [userDetail,setUserDetail] = useState({
         password:"",email:""
@@ -39,7 +39,8 @@ const Signin = () => {
                 alert("successfully logged in");
                 localStorage.setItem("token",JSON.stringify(data.token));
                 localStorage.setItem("name",JSON.stringify(data.name));
-                router("/");
+                functionCall(true);
+                router("/course");
             }
             else{
                 return alert("Invalid credentials");
