@@ -1,105 +1,146 @@
-import React, {useEffect, useState} from 'react';
-import Loading from '../Component/Loading';
-import {LoggedInOrNot} from '../Component/LoggedInOrNot';
-import Modal from 'react-modal';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { LoggedInOrNot } from '../Component/LoggedInOrNot';
+import { getAllCourses } from '../Component/ApiFunctions/getAllCourses';
+import { Container, Typography, Grid, Card, CardContent, CardMedia, TextField, IconButton, Button } from '@mui/material';
+import { Link } from 'react-router-dom';
+import LoadingComponent from '../Component/Loading';
+import NoDataFoundComponent from '../Component/NoDataFound';
+import {  Delete, Edit } from '@mui/icons-material';
 import AddCourseBtn from '../Component/AddCourseBtn';
-import {Link, useNavigate} from 'react-router-dom';
 const Course = () => {
     const navigate = useNavigate();
-    const [isloggedIn, setIsloggedIn] = useState(false);
-    const [course, setcourse] = useState([]);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [courses, setCourses] = useState([]);
+    const [isAdmin,setIsAdmin] = useState(true);
+    const [searchText,setsearchText] = useState("");
     const getStatusOfLoggedIn = () => {
-        let LoggedInOrNots = LoggedInOrNot();
-        if(!LoggedInOrNots){
-            navigate("/signin");
+        let loggedInOrNot = LoggedInOrNot();
+        if (!loggedInOrNot) {
+            navigate('/signin');
         }
-        setIsloggedIn(LoggedInOrNots);
+        setIsLoggedIn(loggedInOrNot);
     };
-    const getCourseData = async () => {
-        let headersList = {
-            "Accept": "*/*",
-            "Content-Type": "application/json"
-        };
-        const getCourses = await fetch("http://localhost:8000/course", {
-            method: "get",
-            headers: headersList,
-        });
-        const data = await getCourses.json();
-        setcourse(data.reverse());
+
+    const fetchData = async () => {
+        try {
+            const data = await getAllCourses();
+            setCourses(data);
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            setLoading(false);
+        }
     };
+
     useEffect(() => {
-        getCourseData();
         getStatusOfLoggedIn();
-    }, [1]);
-    if (course.length === 0) {
-        return (
-            <>
-                <div><Loading /></div>
-            </>
-        );
+        fetchData();
+    }, []);
+
+    if (loading) {
+        return <LoadingComponent />;
     }
+
+    const handleUpdate = ()=>{
+
+    }
+    const handleDelete = () =>{
+
+    }
+
+
+
     return (
-        <>
-            {
-                isloggedIn  ? <>
-                     <AddCourseBtn getCourses = {getCourseData}/>
-                </> : ""
-            }
-            
+        <Container maxWidth="xl">
+            <div className="my-6 sm:my-8 lg:my-12 text-center">
 
-            <div class="bg-white py-6 sm:py-8 lg:py-12">
-                <div class="mx-auto max-w-screen-2xl px-4 md:px-8">
-                    <div class="mb-10 md:mb-16">
-                        <h2 class="mb-4 text-center text-2xl font-bold text-gray-800 md:mb-6 lg:text-3xl underline">Our Courses</h2>
-                        <h3 class="mx-auto max-w-screen-md text-center text-gray-500 md:text-lg">Select Any Course</h3>
-                    </div>
-
-
-                    <div class="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-5 xl:gap-8">
-                        {
-                            course.map((elem) => {
-                                let date = new Date(elem.createdDate);
-                                date = date.getDate() + "/" + (date.getMonth() + 1);
-                                return (
-                                    <>
-                                        <div class="flex flex-col overflow-hidden rounded-lg border shadow-2xl bg-white">
-                                            <Link to={`/course/${elem.name}`} class="group relative block h-32 overflow-hidden bg-gray-100 md:h-50">
-                                                <img src={`/Image/Course/course${(Math.floor(Math.random() *3))}.jpg`} alt='' />
+               <AddCourseBtn/> <Button onClick={fetchData}>refresh</Button>
+              
+                <Typography variant="h4" component="h2" className="mb-4 text-gray-800 lg:text-5xl">
+                    Our Courses
+                </Typography>
+                <Typography variant="h6" component="p" className="text-gray-500 md:text-lg">
+                    Select Any Course
+                </Typography>
+            </div>
+            <TextField
+                label="Search Courses"
+                variant="outlined"
+                fullWidth
+                className="mb-4"
+                value={(e)=>setsearchText(e.target.value)}
+            />
+            {courses.length === 0 ? (
+                <NoDataFoundComponent />
+            ) : (
+                <Grid container spacing={4}>
+                    {courses.map((elem) => {
+                        const date = new Date(elem.createdDate);
+                        const formattedDate = `${date.getDate()}/${date.getMonth() + 1}`;
+                        if(elem.name.indexOf(searchText)!==-1)
+                        return (
+                            <Grid item key={elem._id} xs={12} sm={6} md={4} lg={3} xl={2}>
+                                <Card elevation={3} className="h-full flex flex-col">
+                                    <Link to={`/course/${elem.name}`}>
+                                        <CardMedia
+                                            component="img"
+                                            style={{
+                                                height: '150px',
+                                                objectFit: 'cover',
+                                                maxWidth: '100%',
+                                                borderRadius: '20px',
+                                                boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
+                                            }}
+                                            image={`/Image/Course/course${Math.floor(Math.random() * 3)}.jpg`}
+                                        />
+                                    </Link>
+                                    <CardContent className="flex-1 text-center">
+                                        <Typography variant="h6" component="h2" className="mb-2 text-gray-800">
+                                            <Link to={`/course/${elem.name}`} className="hover:text-indigo-500 active:text-indigo-600">
+                                                {elem.name}
                                             </Link>
-                                            <div class="flex flex-1 flex-col p-4 sm:p-6">
-                                                <h2 class="mb-2 text-lg font-semibold text-gray-800">
-                                                    <Link to={`/course/${elem.name}`} class="transition duration-100 hover:text-indigo-500 active:text-indigo-600">{elem.name}</Link>
-                                                </h2>
-                                                <div class="mt-auto flex items-end justify-between">
-                                                    <div class="flex items-center gap-2">
-                                                        <div>
-                                                            <span class="block text-indigo-500">CreatedAt:</span>
-                                                            <span class="">{date}</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex items-center gap-2">
-                                                        <div>
-                                                            <span class="block text-indigo-500">Sections</span>
-                                                            <span class="">{elem.sections}</span>
-                                                        </div>
-                                                    </div>
+                                        </Typography>
+                                        <div className="mt-auto flex items-end justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <div>
+                                                    <span className="block text-indigo-500">CreatedAt:</span>
+                                                    <span>{formattedDate}</span>
                                                 </div>
                                             </div>
+                                            <div className="flex items-center gap-2">
+                                                <div>
+                                                    <span className="block text-indigo-500">Sections</span>
+                                                    <span>{elem.totalSections}</span>
+                                                </div>
+                                            </div>
+                                            
                                         </div>
-                                    </>
-                                );
-                            })
-                        }
-                    </div>
-
-
-                </div>
-
-            </div>
-
-
-
-        </>
+                                        {isAdmin && (
+                      <div className="mt-3">
+                        <IconButton
+                          color="primary"
+                          onClick={() => handleUpdate(elem._id)}
+                        >
+                          <Edit />
+                        </IconButton>
+                        <IconButton
+                          color="error"
+                          onClick={() => handleDelete(elem._id)}
+                        >
+                          <Delete />
+                        </IconButton>
+                      </div>
+                    )}
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        );
+                    })}
+                </Grid>
+            )}
+        </Container>
     );
 };
 

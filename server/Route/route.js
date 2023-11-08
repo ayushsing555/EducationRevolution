@@ -1,10 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const {getUsers,registerUser,SendOtp,AddCourse,loginUser,getCourse} = require("../Controllers/path");
+const {getUsers,registerUser,SendOtp,AddContent,getOneCourse,AddTopic,AddCourse,AddSection,loginUser,getCourse} = require("../Controllers/path");
 router.route("/users").get(getUsers);
 router.route("/register/user").post(registerUser);
 router.route("/login/user").post(loginUser);
 router.route("/SendOtp").post(SendOtp);
 router.route("/course").get(getCourse);
 router.route("/add/course").post(AddCourse);
+router.route("/add/section").post(AddSection);
+router.route("/course/:id").get(getOneCourse);
+router.route("/add/section/topic").post(AddTopic);
+router.route("/add/content").post(AddContent);
 module.exports = router;

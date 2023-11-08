@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { LoggedInOrNot } from '../Component/LoggedInOrNot';
-import { getIndividualCourse } from '../Component/ApiFunctions/getAllCourses';
-import { Container, Typography, Card, CardContent, CardMedia, Grid, Button, IconButton, TextField } from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
+import { getTopicsAndSectionName } from '../Component/ApiFunctions/getAllCourses';
+import { Container, Typography,Button, Card, CardContent, CardMedia, Grid, IconButton, TextField } from '@mui/material';
+import {  Delete, Edit } from '@mui/icons-material';
 import { FaRegCalendarAlt } from 'react-icons/fa';
-
+import AddTopicBtn from '../Component/AddTopicBtn';
 import LoadingComponent from '../Component/Loading';
 import NoDataFoundComponent from '../Component/NoDataFound';
-import AddSectionBtn from '../Component/AddSectionBtn';
 
-const Section = () => {
-  const { name } = useParams();
+
+const Topic = () => {
+  const { name ,sectionId} = useParams();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [sections, setSections] = useState([]);
+  const [Topics, setTopics] = useState([]);
+  const [SectionName,setSectionName] = useState("");
   const [searchQuery, setSearchQuery] = useState('');
   const isAdmin = /* Add your logic to check if the user is an admin */ true; // Change this to your admin check logic
   const navigate = useNavigate();
+  const [parameter,setParameter] = useState([]);
   const getStatusOfLoggedIn = () => {
     let loggedInOrNot = LoggedInOrNot();
     if (!loggedInOrNot) {
@@ -27,14 +29,17 @@ const Section = () => {
   };
 
   const fetchData = async () => {
-    const data = await getIndividualCourse(name);
-    setSections(data.reverse());
+    const data = await getTopicsAndSectionName(name,sectionId);
+    console.log(data);
+    setTopics(data[1].section.topics.reverse());
+    setSectionName(data[1].section.label);
+    setParameter(data);
     setLoading(false);
   };
 
   useEffect(() => {
+    fetchData();
     getStatusOfLoggedIn();
-    fetchData(name);
   }, []);
 
   const handleUpdate = (sectionId) => {
@@ -45,7 +50,7 @@ const Section = () => {
     // Implement your delete logic here
   };
 
-  const filteredSections = sections.filter((section) => {
+  const filteredTopic = Topics.filter((section) => {
     const sectionName = section.name.toLowerCase();
     const query = searchQuery.toLowerCase();
     return sectionName.includes(query);
@@ -59,14 +64,14 @@ const Section = () => {
     <Container maxWidth="xl">
       <div className="my-6 sm:my-8 lg:my-12 text-center">
         <Typography variant="h4" component="h2" className="mb-4 text-gray-800 lg:text-5xl">
-          {name}
+          {SectionName}
         </Typography>
-        <AddSectionBtn part={"SectionPage"} course={{label:name}} /><Button onClick={fetchData}>refresh</Button>
+        <AddTopicBtn part={"Topic"} course={parameter[0].course}  section={parameter[1].section}/><Button onClick={fetchData}>refresh</Button>
         <Typography variant="h6" component="p" className="text-gray-500 md:text-lg">
-          Select Any Section
+          Select Any Topic
         </Typography>
-        <Link to="/course" className="text-indigo-500 hover:underline">
-          Back to Courses
+        <Link to={`/course/${name}`} className="text-indigo-500 hover:underline">
+          Back to Section
         </Link>
       </div>
       <TextField
@@ -77,18 +82,18 @@ const Section = () => {
         onChange={(e) => setSearchQuery(e.target.value)}
         className="mb-4"
       />
-      {filteredSections.length === 0 ? (
+      {filteredTopic.length === 0 ? (
         <NoDataFoundComponent />
       ) : (
         <Grid container spacing={4}>
-          {filteredSections.map((elem) => {
+          {filteredTopic.map((elem) => {
             const date = new Date(elem.createdDate);
             const formattedDate = `${date.getDate()}/${date.getMonth() + 1}`;
 
             return (
               <Grid item key={elem._id} xs={12} sm={6} md={4} lg={3} xl={2}>
                 <Card elevation={3} className="h-full flex flex-col">
-                  <Link to={`/course/${name}/${elem._id}/`}>
+                  <Link to={`/course/${name}/${sectionId}/${elem._id}`}>
                     <CardMedia
                       component="img"
                       style={{
@@ -103,7 +108,7 @@ const Section = () => {
                   </Link>
                   <CardContent className="flex-1 text-center">
                     <Typography variant="h6" component="h2" className="mb-2 text-gray-800">
-                      <Link to={`/course/${name}/${elem._id}/`} className="hover:text-indigo-500 active:text-indigo-600">
+                      <Link to={`/course/${name}/${sectionId}/${elem._id}`} className="hover:text-indigo-500 active:text-indigo-600">
                         {elem.name}
                       </Link>
                     </Typography>
@@ -114,7 +119,7 @@ const Section = () => {
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-indigo-500">Topics</span>
-                        <span>{elem.Topic.length}</span>
+                        <span>{elem.Topics}</span>
                       </div>
                     </div>
                     {isAdmin && (
@@ -144,4 +149,4 @@ const Section = () => {
   );
 };
 
-export default Section;
+export default Topic;

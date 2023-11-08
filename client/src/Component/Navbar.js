@@ -24,6 +24,7 @@ const Navbar = () => {
                             </> : <>
                                 <Link to="/Logout" className="text-white hover:underline mx-4">logout</Link>
                                 <Link to="/course" className='text-white hover:underline mx-4'>Courses</Link>
+                                <Link to="/quiz" className="text-white hover:underline mx-4">QuizSection</Link>
                             </>
                         }
                     </div>

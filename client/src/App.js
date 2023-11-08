@@ -11,7 +11,13 @@ import {Routes, Route, BrowserRouter} from 'react-router-dom';
 import Course from './Pages/Course';
 import {useState} from 'react';
 import Section from './Pages/Section';
-import { useNavigate } from 'react-router-dom';
+import Student from './Pages/Admin/student';
+import Admin from './Pages/Admin';
+import Content from './Component/Content';
+import Quiz from './Pages/Quiz';
+import Topic from './Pages/Topic';
+import ContentPage from './Pages/content';
+import Footer from './Component/Footer';
 const App = () => {
   const [isLoggedIn, setLoggedIn] = useState(false);
   // Callback function to update the 'isLoggedIn' state
@@ -30,8 +36,15 @@ const App = () => {
           <Route path='/Quiz/*' element={<Commingsoon />} />
           <Route path='*' element={<Notfound />} />
           <Route path='/course/' element={<Course />} />
-          <Route path='/course/:id' element={<Section/>}/>
+          <Route path='/course/:name' element={<Section />} />
+          <Route path='/admin' element={<Admin/>}/>
+          <Route path='/admin/student' element={<Student/>}/>
+          <Route path='/admin/content' element={<Content/>}/>
+          <Route path='/quiz' element={<Quiz/>}/>
+          <Route path='/course/:name/:sectionId' element={<Topic/>}/>
+          <Route path='/course/:name/:sectionId/:TopicId' element={<ContentPage/>}/>
         </Routes>
+        <Footer/>
       </BrowserRouter>
     </>
   );

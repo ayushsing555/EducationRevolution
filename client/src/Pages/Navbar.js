@@ -16,11 +16,9 @@ const Navbar = () => {
         // Clear user data from localStorage
         localStorage.removeItem('name');
         localStorage.removeItem('token');
-
-        navigate("/signin")
+        
         // Update the 'loggedIn' state to false
         setLoggedIn(false);
-
         // Redirect to the home page or any other desired page after logout
     };
 
@@ -39,6 +37,8 @@ const Navbar = () => {
                             </> : <>
                                 <Link onClick={logout} className="text-white hover:underline mx-4">logout</Link>
                                 <Link to="/course" className='text-white hover:underline mx-4'>Courses</Link>
+                                <Link to="/quiz"className='text-white hover:underline mx-4'>Quiz</Link>
+                                <Link to ='/admin' className='text-white hovdr:underline mx-4'>Admin</Link>
                             </>
                         }
                     </div>

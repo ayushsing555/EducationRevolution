@@ -1,7 +1,5 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-import {BsCheckLg} from 'react-icons/bs'
-import {BsArrowLeftShort} from 'react-icons/bs'
 const Commingsoon = () => {
   return  (
     <div className="flex flex-col items-center justify-center m-auto">
