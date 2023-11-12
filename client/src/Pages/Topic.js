@@ -1,25 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
-import { LoggedInOrNot } from '../Component/LoggedInOrNot';
-import { getTopicsAndSectionName } from '../Component/ApiFunctions/getAllCourses';
-import { Container, Typography,Button, Card, CardContent, CardMedia, Grid, IconButton, TextField } from '@mui/material';
-import {  Delete, Edit } from '@mui/icons-material';
-import { FaRegCalendarAlt } from 'react-icons/fa';
+import React, {useEffect, useState} from 'react';
+import {useNavigate, useParams, Link} from 'react-router-dom';
+import {LoggedInOrNot} from '../Component/LoggedInOrNot';
+import {getTopicsAndSectionName} from '../Component/ApiFunctions/getAllCourses';
+import {Container, Typography, Button, Grid, TextField} from '@mui/material';
+
 import AddTopicBtn from '../Component/AddTopicBtn';
 import LoadingComponent from '../Component/Loading';
 import NoDataFoundComponent from '../Component/NoDataFound';
-
+import Box from '../Component/Box';
 
 const Topic = () => {
-  const { name ,sectionId} = useParams();
+  const {name, sectionId} = useParams();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [Topics, setTopics] = useState([]);
-  const [SectionName,setSectionName] = useState("");
+  const [SectionName, setSectionName] = useState("");
   const [searchQuery, setSearchQuery] = useState('');
-  const isAdmin = /* Add your logic to check if the user is an admin */ true; // Change this to your admin check logic
   const navigate = useNavigate();
-  const [parameter,setParameter] = useState([]);
+  const [parameter, setParameter] = useState([]);
   const getStatusOfLoggedIn = () => {
     let loggedInOrNot = LoggedInOrNot();
     if (!loggedInOrNot) {
@@ -29,7 +27,7 @@ const Topic = () => {
   };
 
   const fetchData = async () => {
-    const data = await getTopicsAndSectionName(name,sectionId);
+    const data = await getTopicsAndSectionName(name, sectionId);
     console.log(data);
     setTopics(data[1].section.topics.reverse());
     setSectionName(data[1].section.label);
@@ -66,7 +64,7 @@ const Topic = () => {
         <Typography variant="h4" component="h2" className="mb-4 text-gray-800 lg:text-5xl">
           {SectionName}
         </Typography>
-        <AddTopicBtn part={"Topic"} course={parameter[0].course}  section={parameter[1].section}/><Button onClick={fetchData}>refresh</Button>
+        <AddTopicBtn part={"Topic"} course={parameter[0].course} section={parameter[1].section} /><Button onClick={fetchData}>refresh</Button>
         <Typography variant="h6" component="p" className="text-gray-500 md:text-lg">
           Select Any Topic
         </Typography>
@@ -87,60 +85,13 @@ const Topic = () => {
       ) : (
         <Grid container spacing={4}>
           {filteredTopic.map((elem) => {
-            const date = new Date(elem.createdDate);
-            const formattedDate = `${date.getDate()}/${date.getMonth() + 1}`;
-
             return (
-              <Grid item key={elem._id} xs={12} sm={6} md={4} lg={3} xl={2}>
-                <Card elevation={3} className="h-full flex flex-col">
-                  <Link to={`/course/${name}/${sectionId}/${elem._id}`}>
-                    <CardMedia
-                      component="img"
-                      style={{
-                        height: '150px',
-                        objectFit: 'cover',
-                        maxWidth: '100%',
-                        borderRadius: '20px',
-                        boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
-                      }}
-                      image={`/Image/Course/course${Math.floor(Math.random() * 3)}.jpg`}
-                    />
-                  </Link>
-                  <CardContent className="flex-1 text-center">
-                    <Typography variant="h6" component="h2" className="mb-2 text-gray-800">
-                      <Link to={`/course/${name}/${sectionId}/${elem._id}`} className="hover:text-indigo-500 active:text-indigo-600">
-                        {elem.name}
-                      </Link>
-                    </Typography>
-                    <div className="mt-auto flex items-end justify-between">
-                      <div className="flex items-center gap-2">
-                        <FaRegCalendarAlt size={20} className="text-indigo-500" />
-                        <span>{formattedDate}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-indigo-500">Topics</span>
-                        <span>{elem.Topics}</span>
-                      </div>
-                    </div>
-                    {isAdmin && (
-                      <div className="mt-3">
-                        <IconButton
-                          color="primary"
-                          onClick={() => handleUpdate(elem._id)}
-                        >
-                          <Edit />
-                        </IconButton>
-                        <IconButton
-                          color="error"
-                          onClick={() => handleDelete(elem._id)}
-                        >
-                          <Delete />
-                        </IconButton>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </Grid>
+              <Box
+                title="topic"
+                elem={elem}
+                courseName={parameter[0].course.label}
+                sectionId = {parameter[1].section.value}
+              />
             );
           })}
         </Grid>

@@ -126,7 +126,7 @@ const AddTopic = async (req, res) => {
     };
     try {
         // Find the course by its _id
-        const course = await Course.findOne({name:courseId}).exec();
+        const course = await Course.findOne({name: courseId}).exec();
 
         if (!course) {
             return res.status(400).send({success: false, message: "Course not found."});
@@ -200,4 +200,58 @@ const AddContent = async (req, res) => {
     }
 
 };
-module.exports = {getUsers, AddTopic, AddContent, getCourse, getOneCourse, AddSection, AddCourse, SendOtp, registerUser, loginUser};
+
+const CourseUpdate = async (req, res) => {
+    try {
+        const {courseName, updatedValue} = req.body;
+        const ExistingCourse = await Course.findOne({name: courseName});
+        if (ExistingCourse) {
+            ExistingCourse.name = updatedValue;
+        }
+        const result = await ExistingCourse.save();
+        if (result) {
+            res.status(200).send({success: true, message: "Update Successfully"});
+        }
+    } catch (error) {
+        res.status(400).send({success: false, error: "Some thing went Wrong"});
+    }
+};
+
+const SectionUpdate = async (req, res) => {
+    try {
+        const {courseName, sectionId, updatedValue} = req.body;
+        const ExistingCourse = await Course.findOne({name: courseName}).exec();
+        const ExistingSection = await ExistingCourse.sections.id(sectionId);
+        if (ExistingSection) {
+            ExistingSection.name = updatedValue;
+        }
+        // console.log(ExistingSection);
+        const result = await ExistingCourse.save();
+        if (result) {
+            res.status(200).send({success: true, message: "Update Successfully"});
+        }
+    } catch (error) {
+        res.status(400).send({success: false, message: "Update Successfully"});
+    }
+};
+
+const TopicUpdate = async (req, res) => {
+    const {courseName, sectionId, topicId, updatedValue} = req.body;
+
+    try {
+        const ExistingCourse = await Course.findOne({name: courseName}).exec();
+        const ExistingSection = await ExistingCourse.sections.id(sectionId);
+        const ExistingTopic = await ExistingSection.Topic.id(topicId);
+        if (ExistingTopic) {
+            ExistingTopic.name = updatedValue;
+        }
+        const result = await ExistingCourse.save();
+        if (result) {
+            res.status(200).send({success: true, message: "Update Successfully"});
+        }
+    } catch (error) {
+        res.status(400).send({success: false, message: "Update Successfully"});
+    }
+
+};
+module.exports = {getUsers, CourseUpdate, SectionUpdate, TopicUpdate, AddTopic, AddContent, getCourse, getOneCourse, AddSection, AddCourse, SendOtp, registerUser, loginUser};

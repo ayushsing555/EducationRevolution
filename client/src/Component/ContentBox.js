@@ -39,8 +39,8 @@ const ContentBox = ({elem, index}) => {
                 </Typography>
             ) : (
                 <Typography variant="body1" className="text-gray-700">
-                    Detail: {content.slice(0, 100)} {/* Show only the first 100 characters */}
-                    {content.length > 100 && (
+                    Detail: {content.slice(0, 50)} {/* Show only the first 100 characters */}
+                    {content.length > 50 && (
                         <button onClick={toggleContent} className="text-indigo-500 hover:underline">
                             ...Read more
                         </button>

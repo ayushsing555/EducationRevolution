@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
-import { LoggedInOrNot } from '../Component/LoggedInOrNot';
-import { getIndividualCourse } from '../Component/ApiFunctions/getAllCourses';
-import { Container, Typography, Card, CardContent, CardMedia, Grid, Button, IconButton, TextField } from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
-import { FaRegCalendarAlt } from 'react-icons/fa';
-
+import React, {useEffect, useState} from 'react';
+import {useNavigate, useParams, Link} from 'react-router-dom';
+import {LoggedInOrNot} from '../Component/LoggedInOrNot';
+import {getIndividualCourse} from '../Component/ApiFunctions/getAllCourses';
+import {Container, Typography, Card, CardContent, CardMedia, Grid, Button, IconButton, TextField} from '@mui/material';
+import {Delete, Edit} from '@mui/icons-material';
+import {FaRegCalendarAlt} from 'react-icons/fa';
+import Box from '../Component/Box';
 import LoadingComponent from '../Component/Loading';
 import NoDataFoundComponent from '../Component/NoDataFound';
 import AddSectionBtn from '../Component/AddSectionBtn';
 
 const Section = () => {
-  const { name } = useParams();
+  const {name} = useParams();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [sections, setSections] = useState([]);
@@ -61,7 +61,7 @@ const Section = () => {
         <Typography variant="h4" component="h2" className="mb-4 text-gray-800 lg:text-5xl">
           {name}
         </Typography>
-        <AddSectionBtn part={"SectionPage"} course={{label:name}} /><Button onClick={fetchData}>refresh</Button>
+        <AddSectionBtn part={"SectionPage"} course={{label: name}} /><Button onClick={fetchData}>refresh</Button>
         <Typography variant="h6" component="p" className="text-gray-500 md:text-lg">
           Select Any Section
         </Typography>
@@ -82,60 +82,12 @@ const Section = () => {
       ) : (
         <Grid container spacing={4}>
           {filteredSections.map((elem) => {
-            const date = new Date(elem.createdDate);
-            const formattedDate = `${date.getDate()}/${date.getMonth() + 1}`;
-
             return (
-              <Grid item key={elem._id} xs={12} sm={6} md={4} lg={3} xl={2}>
-                <Card elevation={3} className="h-full flex flex-col">
-                  <Link to={`/course/${name}/${elem._id}/`}>
-                    <CardMedia
-                      component="img"
-                      style={{
-                        height: '150px',
-                        objectFit: 'cover',
-                        maxWidth: '100%',
-                        borderRadius: '20px',
-                        boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
-                      }}
-                      image={`/Image/Course/course${Math.floor(Math.random() * 3)}.jpg`}
-                    />
-                  </Link>
-                  <CardContent className="flex-1 text-center">
-                    <Typography variant="h6" component="h2" className="mb-2 text-gray-800">
-                      <Link to={`/course/${name}/${elem._id}/`} className="hover:text-indigo-500 active:text-indigo-600">
-                        {elem.name}
-                      </Link>
-                    </Typography>
-                    <div className="mt-auto flex items-end justify-between">
-                      <div className="flex items-center gap-2">
-                        <FaRegCalendarAlt size={20} className="text-indigo-500" />
-                        <span>{formattedDate}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-indigo-500">Topics</span>
-                        <span>{elem.Topic.length}</span>
-                      </div>
-                    </div>
-                    {isAdmin && (
-                      <div className="mt-3">
-                        <IconButton
-                          color="primary"
-                          onClick={() => handleUpdate(elem._id)}
-                        >
-                          <Edit />
-                        </IconButton>
-                        <IconButton
-                          color="error"
-                          onClick={() => handleDelete(elem._id)}
-                        >
-                          <Delete />
-                        </IconButton>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </Grid>
+              <Box
+                title="section"
+                elem={elem}
+                courseName={name}
+              />
             );
           })}
         </Grid>

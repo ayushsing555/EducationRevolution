@@ -29,6 +29,7 @@ export async function getTopicsAndSectionName(courseName, sectionId) {
     result.push({course: {label: courseName}});
     const data = await getAllCourses();
     let course = data.filter((c) => c.name === courseName);
+    console.log(course)
     if (course) {
         const Onesection = course[0].sections.filter((s) => s._id === sectionId);
         if (Onesection) {
