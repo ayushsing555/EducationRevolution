@@ -11,15 +11,15 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import {AddContentApi} from './ApiFunctions/AddCourseApi';
+import {isValidImage} from './Functionality/ValidityFunction/isValidImage';
 
-
-const AddContentBtn = ({part, course, section, Topic,refreshData}) => {
-    console.log(course,section,Topic);
+const AddContentBtn = ({part, course, section, Topic, refreshData}) => {
+    console.log(course, section, Topic);
     const [isModalOpen, setModalOpen] = useState(false);
     const [subtopics, setSubtopics] = useState([]);
     const [subtopicName, setSubtopicName] = useState('');
     const [subtopicContent, setSubtopicContent] = useState('');
-    const [image, setImage] = useState('');
+    const [image, setImage] = useState("");
 
     if (section == null || course == null || Topic == null) {
         return null;
@@ -32,7 +32,7 @@ const AddContentBtn = ({part, course, section, Topic,refreshData}) => {
         let result = AddContentApi(subtopics, section, Topic, course);
         if (result)
             setSubtopics([]);
-        if(part==='ContentPage'){
+        if (part === 'ContentPage') {
             refreshData();
         }
         // Handle your form submission here
@@ -47,19 +47,44 @@ const AddContentBtn = ({part, course, section, Topic,refreshData}) => {
         setModalOpen(false);
     };
 
-    const addSubtopic = () => {
-        if (subtopicName && subtopicContent) {
-            setSubtopics([
-                ...subtopics,
-                {
-                    name: subtopicName,
-                    content: subtopicContent,
-                    url: image
-                },
-            ]);
-            setSubtopicName('');
-            setSubtopicContent('');
-            setImage('');
+    const addSubtopic = async () => {
+        console.log(image);
+        if (image !== "") {
+            const result = await isValidImage(image);
+            if (result) {
+                console.log(isValidImage(image));
+                if (subtopicName && subtopicContent) {
+                    setSubtopics([
+                        ...subtopics,
+                        {
+                            name: subtopicName,
+                            content: subtopicContent,
+                            url: image
+                        },
+                    ]);
+                    setSubtopicName('');
+                    setSubtopicContent('');
+                    setImage("");
+                }
+            }
+            else {
+                alert("Please upload a valid Image Url");
+                setImage("");
+            }
+        } else {
+            if (subtopicName && subtopicContent) {
+                setSubtopics([
+                    ...subtopics,
+                    {
+                        name: subtopicName,
+                        content: subtopicContent,
+                        url: image
+                    },
+                ]);
+                setSubtopicName('');
+                setSubtopicContent('');
+                setImage("");
+            }
         }
     };
 
@@ -111,12 +136,14 @@ const AddContentBtn = ({part, course, section, Topic,refreshData}) => {
                                                 subtopic.content.length > 10 ? subtopic.content.substring(0, 10) + "..." : subtopic.content
                                             }
                                         </Typography>
-                                        <Typography variant="body1">
-                                            <strong className='text-red-300'>ImageUrl:</strong> {
-                                                subtopic.url.length > 10 ? subtopic.url.substring(0, 10) + "..." : subtopic.url
-                                            }
-                                        </Typography>
-                                        {/* Add image display here */}
+                                        {subtopic.url && (
+                                            <img
+                                                src={subtopic.url}
+                                                alt={subtopic.name}
+                                                style={{maxWidth: '100%', maxHeight: '200px', marginTop: '10px'}}
+                                            />
+                                        )}
+
                                     </div>
                                 ))}
                             </CardContent>

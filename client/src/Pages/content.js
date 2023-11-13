@@ -4,6 +4,7 @@ import LoadingComponent from '../Component/Loading';
 import {getContent} from '../Component/ApiFunctions/getAllCourses';
 import {Container,Button, Typography} from '@mui/material';
 import {Link} from 'react-router-dom';
+
 import NoDataFound from '../Component/NoDataFound';
 import ContentBox from '../Component/ContentBox';
 import AddContentBtn from '../Component/AddContentBtn';
@@ -51,7 +52,7 @@ const Content = () => {
       ) : (
         content.map((elem, index) => {
           return (
-            <ContentBox elem={elem} index={index} />
+            <ContentBox elem={elem} index={index} name={name} sectionId={sectionId} topicId = {TopicId} RefreshData = {fetchData} />
           );
         })
       )}

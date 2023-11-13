@@ -8,7 +8,6 @@ import AddTopicBtn from '../Component/AddTopicBtn';
 import LoadingComponent from '../Component/Loading';
 import NoDataFoundComponent from '../Component/NoDataFound';
 import Box from '../Component/Box';
-
 const Topic = () => {
   const {name, sectionId} = useParams();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -40,13 +39,7 @@ const Topic = () => {
     getStatusOfLoggedIn();
   }, []);
 
-  const handleUpdate = (sectionId) => {
-    // Implement your update logic here
-  };
-
-  const handleDelete = (sectionId) => {
-    // Implement your delete logic here
-  };
+  
 
   const filteredTopic = Topics.filter((section) => {
     const sectionName = section.name.toLowerCase();

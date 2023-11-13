@@ -254,4 +254,35 @@ const TopicUpdate = async (req, res) => {
     }
 
 };
-module.exports = {getUsers, CourseUpdate, SectionUpdate, TopicUpdate, AddTopic, AddContent, getCourse, getOneCourse, AddSection, AddCourse, SendOtp, registerUser, loginUser};
+
+const ContentUpdate = async (req, res) => {
+    try {
+        const {name, sectionId, topicId, contentId, contentName, content} = req.body;
+        console.log(name, sectionId, topicId, contentId, contentName, content);
+        if(content==""&&contentName==""){
+            return res.status(200).send({success: true, message: "Successfully updated"});
+        }
+        const ExistingCourse = await Course.findOne({name: name}).exec();
+        const ExistingSection = await ExistingCourse.sections.id(sectionId);
+        const ExistingTopic = await ExistingSection.Topic.id(topicId);
+        const ExistingContent = await ExistingTopic.content.id(contentId);
+        console.log(ExistingContent);
+        if (ExistingContent) {
+            if(content!=="")
+            ExistingContent.content = content;
+            if(contentName!==""){
+            ExistingContent.name = contentName;
+            }
+        }
+        const result = await ExistingCourse.save();
+        if (result) {
+            return res.status(200).send({success: true, message: "successfully updated"});
+        }
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send({success:false,error:"some thing went wrong"})
+    }
+
+
+};
+module.exports = {getUsers, ContentUpdate, CourseUpdate, SectionUpdate, TopicUpdate, AddTopic, AddContent, getCourse, getOneCourse, AddSection, AddCourse, SendOtp, registerUser, loginUser};

@@ -3,8 +3,7 @@ import {useNavigate, useParams, Link} from 'react-router-dom';
 import {LoggedInOrNot} from '../Component/LoggedInOrNot';
 import {getIndividualCourse} from '../Component/ApiFunctions/getAllCourses';
 import {Container, Typography, Card, CardContent, CardMedia, Grid, Button, IconButton, TextField} from '@mui/material';
-import {Delete, Edit} from '@mui/icons-material';
-import {FaRegCalendarAlt} from 'react-icons/fa';
+
 import Box from '../Component/Box';
 import LoadingComponent from '../Component/Loading';
 import NoDataFoundComponent from '../Component/NoDataFound';

@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import {Typography, Grid, Card, CardContent, TextField, IconButton, Button} from '@mui/material';
 import {Delete, Edit, Topic} from '@mui/icons-material';
 import DoneIcon from '@mui/icons-material/Done';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import downloadBulkDataWithStyle from './Functionality/downloadFiles/downloadBulkData';
 import {Link} from 'react-router-dom';
 const Box = ({title, elem, courseName, sectionId, TopicId}) => {
     const [isAdmin, SetIsAdmin] = useState(true);
@@ -119,14 +121,22 @@ const Box = ({title, elem, courseName, sectionId, TopicId}) => {
                                 <Link to={`/course/${elem.name}`} className="hover:text-indigo-500 active:text-indigo-600">
                                     {elem.name}
                                 </Link>
+                                
                             ) : title === 'section' ? (
                                 <Link to={`/course/${courseName}/${elem._id}/`} className="hover:text-indigo-500 active:text-indigo-600">
                                     {elem.name}
                                 </Link>
+
                             ) : (
+                                <>
                                 <Link to={`/course/${courseName}/${sectionId}/${elem._id}`} className="hover:text-indigo-500 active:text-indigo-600">
                                     {elem.name}
                                 </Link>
+                                <IconButton color="primary" onClick={() => downloadBulkDataWithStyle(elem)}>
+                            <CloudDownloadIcon />
+                        </IconButton>
+                                </>
+                                
                             )
                         )}
                     </Typography>
