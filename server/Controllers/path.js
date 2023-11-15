@@ -56,20 +56,24 @@ const loginUser = async (req, res) => {
 
 const AddCourse = async (req, res) => {
     try {
-        const {name} = req.body;
-        console.log(name);
-        const id = ShortPassword();
-        const newCourse = new Course({
-            name, id
-        });
-        const generatedCourse = await newCourse.save();
-        if (generatedCourse) {
-            return res.status(200).send({success: true, message: "successfully added"});
-        }
-    } catch (error) {
-        return res.status(400).send({success: false, error: "something went wrong"});
-    }
+    const { name } = req.body;
+    const id = ShortPassword();
+    
+    // Create a new course with an empty array of sections
+    const newCourse = new Course({ name, id});
 
+    // Save the course
+    console.log(newCourse);
+    const generatedCourse = await newCourse.save();
+    console.log(generatedCourse);
+
+    if (generatedCourse) {
+        return res.status(200).send({ success: true, message: "successfully added" });
+    }
+} catch (error) {
+    console.log(error);
+    return res.status(400).send({ success: false, error: "something went wrong" });
+}
 
 };
 
@@ -81,26 +85,40 @@ const AddSection = async (req, res) => {
             return res.status(400).send({success: false, error: "Course not found"});
         }
 
-        // Attempt to add the section to the course
-        try {
-            const newSection = existingCourse.addSection(sectionName);
-
-            existingCourse.totalSections = existingCourse.sections.length;
-
-            return res.status(200).send({success: true, message: "Successfully added"});
-        } catch (error) {
-            if (error.name === 'ValidationError') {
-                // Handle the validation error for duplicate section name
-                return res.status(400).send({success: false, error: "Section name must be unique"});
-            } else {
-                // Handle other errors with a more specific message
-                return res.status(400).send({success: false, error: "Failed to add section"});
-            }
+        const newSection = {
+            name:sectionName,
         }
-    } catch (error) {
-        // Handle any other unexpected errors with a specific message
-        return res.status(500).send({success: false, error: "Internal server error"});
+        existingCourse.sections.push(newSection);
+
+        await existingCourse.save();
+
+        return res.status(200).send({success: true, message: "Topic added to the section successfully."});
     }
+    catch(err){
+        console.error("Error:", err);
+        return res.status(400).send({success: false, message: "something went wrong"});
+    }
+    
+        // Attempt to add the section to the course
+    //     try {
+    //         const newSection = existingCourse.addSection(sectionName);
+
+    //         existingCourse.totalSections = existingCourse.sections.length;
+
+    //         return res.status(200).send({success: true, message: "Successfully added"});
+    //     } catch (error) {
+    //         if (error.name === 'ValidationError') {
+    //             // Handle the validation error for duplicate section name
+    //             return res.status(400).send({success: false, error: "Section name must be unique"});
+    //         } else {
+    //             // Handle other errors with a more specific message
+    //             return res.status(400).send({success: false, error: "Failed to add section"});
+    //         }
+    //     }
+    // } catch (error) {
+    //     // Handle any other unexpected errors with a specific message
+    //     return res.status(500).send({success: false, error: "Internal server error"});
+    // }
 };
 
 
@@ -259,7 +277,7 @@ const ContentUpdate = async (req, res) => {
     try {
         const {name, sectionId, topicId, contentId, contentName, content} = req.body;
         console.log(name, sectionId, topicId, contentId, contentName, content);
-        if(content==""&&contentName==""){
+        if (content == "" && contentName == "") {
             return res.status(200).send({success: true, message: "Successfully updated"});
         }
         const ExistingCourse = await Course.findOne({name: name}).exec();
@@ -268,10 +286,10 @@ const ContentUpdate = async (req, res) => {
         const ExistingContent = await ExistingTopic.content.id(contentId);
         console.log(ExistingContent);
         if (ExistingContent) {
-            if(content!=="")
-            ExistingContent.content = content;
-            if(contentName!==""){
-            ExistingContent.name = contentName;
+            if (content !== "")
+                ExistingContent.content = content;
+            if (contentName !== "") {
+                ExistingContent.name = contentName;
             }
         }
         const result = await ExistingCourse.save();
@@ -279,10 +297,136 @@ const ContentUpdate = async (req, res) => {
             return res.status(200).send({success: true, message: "successfully updated"});
         }
     } catch (error) {
-        console.log(error)
-        return res.status(400).send({success:false,error:"some thing went wrong"})
+        console.log(error);
+        return res.status(400).send({success: false, error: "some thing went wrong"});
     }
 
 
 };
-module.exports = {getUsers, ContentUpdate, CourseUpdate, SectionUpdate, TopicUpdate, AddTopic, AddContent, getCourse, getOneCourse, AddSection, AddCourse, SendOtp, registerUser, loginUser};
+
+const ContentDelete = async (req, res) => {
+    const {name, sectionId, topicId, contentId} = req.body;
+    try {
+        const course = await Course.findOne({name: name});
+
+        if (!course) {
+            return res.status(400).send({success: true, error: "Something went wrong"});
+
+        }
+
+        const section = course.sections.find((s) => s._id.toString() === sectionId);
+
+        if (!section) {
+            return res.status(400).send({success: false, error: "Something went wrong"});
+
+        }
+
+        const topic = section.Topic.find((t) => t._id.toString() === topicId);
+
+
+        if (!topic) {
+            return res.status(400).send({success: false, error: "Something went wrong"});
+
+        }
+
+
+        const contentIndex = topic.content.findIndex((c) => c._id.toString() === contentId);
+
+
+        if (contentIndex === -1) {
+            console.log(`Content ${contentId} not found in topic ${topicId} of section ${sectionId} in course ${courseName}.`);
+            return res.status(400).send({success: false, error: "Something went wrong"});
+
+        }
+
+
+        topic.content.splice(contentIndex, 1);
+
+        await course.save();
+
+        return res.status(200).send({success: true, message: "Deleted Successfully"});
+    } catch (error) {
+        console.log(error);
+        return res.status(400).send({success: true, error: "Something went wrong"});
+
+    }
+};
+
+const TopicDelete = async (req, res) => {
+    const {name, sectionId, topicId} = req.body;
+    try {
+        const course = await Course.findOne({name: name});
+
+        if (!course) {
+            return res.status(400).send({success: true, error: "Something went wrong"});
+
+        }
+
+        const section = course.sections.find((s) => s._id.toString() === sectionId);
+
+        if (!section) {
+            return res.status(400).send({success: false, error: "Something went wrong"});
+
+        }
+
+        const topicIndex = section.Topic.findIndex((t) => t._id.toString() === topicId);
+
+
+        if (topicIndex == -1) {
+            return res.status(400).send({success: false, error: "Something went wrong"});
+
+        }
+
+        section.Topic.splice(topicIndex, 1);
+
+        // Save the changes
+        await course.save();
+
+        return res.status(200).send({success: true, message: "Deleted Successfully"});
+    } catch (error) {
+        console.log(error);
+        return res.status(400).send({success: true, error: "Something went wrong"});
+
+    }
+
+};
+
+const SectionDelete = async (req, res) => {
+    const {name, sectionId} = req.body;
+    try {
+        const course = await Course.findOne({name: name});
+
+        if (!course) {
+            return res.status(400).send({success: true, error: "Something went wrong"});
+
+        }
+        const sectionIndex = course.sections.findIndex((s) => s._id.toString() === sectionId);
+
+        if (sectionIndex == -1) {
+            return res.status(400).send({success: false, error: "Something went wrong"});
+
+        }
+
+        course.sections.splice(sectionIndex, 1);
+
+        await course.save();
+        return res.status(200).send({success: true, message: "Deleted Successfully"});
+
+
+    } catch (error) {
+        console.log(error);
+        return res.status(400).send({success: true, error: "Something went wrong"});
+    }
+};
+
+const CourseDelete = async(req,res) =>{
+    const {name} = req.body;
+    try {
+        await Course.findOneAndDelete({name: name});
+        return res.status(200).send({success: true, message: "Deleted Successfully"});
+    } catch (error) {
+        console.log(error);
+        return res.status(400).send({success: false, error: "Something went wrong"});
+    }
+}
+module.exports = {getUsers, ContentDelete, SectionDelete,CourseDelete, TopicDelete, ContentUpdate, CourseUpdate, SectionUpdate, TopicUpdate, AddTopic, AddContent, getCourse, getOneCourse, AddSection, AddCourse, SendOtp, registerUser, loginUser};

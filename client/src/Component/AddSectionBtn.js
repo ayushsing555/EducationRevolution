@@ -1,11 +1,11 @@
 import React from 'react';
-import { useState } from 'react';
+import {useState} from 'react';
 import Modal from 'react-modal';
-import { AddSectionApi } from './ApiFunctions/AddCourseApi';
-import { Button, Typography, TextField, Card, CardContent } from '@mui/material';
+import {AddSectionApi} from './ApiFunctions/AddCourseApi';
+import {Button, Typography, TextField, Card, CardContent} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { modalStyles } from './Styles/modelStylles';
-const AddSectionBtn = ({ part, course }) => {
+import {modalStyles} from './Styles/modelStylles';
+const AddSectionBtn = ({part, course, refreshData}) => {
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [sectionName, setSectionName] = useState('');
@@ -18,8 +18,12 @@ const AddSectionBtn = ({ part, course }) => {
     if (course == null || sectionName === '') {
       return alert('Please enter valid values.');
     }
-    AddSectionApi(course.label, sectionName);
-    setModalOpen(false);
+    let result = AddSectionApi(course.label, sectionName);
+    if (result) {
+      setModalOpen(false);
+      refreshData();
+    }
+
   };
 
   const openModal = () => {
@@ -33,7 +37,7 @@ const AddSectionBtn = ({ part, course }) => {
   return (
     <>
       <div>
-        <Button onClick={openModal} variant="contained" color="primary" style={{ margin: '10px' }}>
+        <Button onClick={openModal} variant="contained" color="primary" style={{margin: '10px'}}>
           Add Section
         </Button>
       </div>
@@ -57,12 +61,12 @@ const AddSectionBtn = ({ part, course }) => {
               onChange={(e) => setSectionName(e.target.value)}
               variant="outlined"
             />
-            <div style={{ marginTop: '20px' }}>
+            <div style={{marginTop: '20px'}}>
               <Button
                 onClick={handleSubmit}
                 variant="contained"
                 color="primary"
-                style={{ marginRight: '10px' }}
+                style={{marginRight: '10px'}}
               >
                 Add
               </Button>

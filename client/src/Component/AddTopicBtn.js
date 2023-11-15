@@ -5,7 +5,7 @@ import { AddTopicApi } from './ApiFunctions/AddCourseApi';
 import { Button, Typography, TextField, Card, CardContent } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { modalStyles } from './Styles/modelStylles';
-const AddSectionBtn = ({ part, course, section }) => {
+const AddSectionBtn = ({ part, course, section,refreshData }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [topicName, setTopicName] = useState('');
   console.log(section)
@@ -17,6 +17,7 @@ const AddSectionBtn = ({ part, course, section }) => {
     let result = AddTopicApi(course.label, section.value, topicName);
     if (result) {
       setModalOpen(false);
+      refreshData();
     }
   };
 

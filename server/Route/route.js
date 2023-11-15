@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {getUsers,registerUser,SendOtp,CourseUpdate,ContentUpdate,SectionUpdate,TopicUpdate,AddContent,getOneCourse,AddTopic,AddCourse,AddSection,loginUser,getCourse} = require("../Controllers/path");
+const {getUsers,registerUser,SendOtp,CourseUpdate,SectionDelete,CourseDelete,TopicDelete,ContentUpdate,SectionUpdate,TopicUpdate,AddContent,getOneCourse,AddTopic,AddCourse,AddSection,loginUser,getCourse,ContentDelete} = require("../Controllers/path");
 router.route("/users").get(getUsers);
 router.route("/register/user").post(registerUser);
 router.route("/login/user").post(loginUser);
@@ -15,4 +15,8 @@ router.route("/course/update").put(CourseUpdate);
 router.route("/course/section/update").put(SectionUpdate);
 router.route("/course/section/topic/update").put(TopicUpdate);
 router.route("/content/update").put(ContentUpdate);
+router.route("/content/delete").delete(ContentDelete);
+router.route("/course/section/topic/delete").delete(TopicDelete);
+router.route("/course/section/delete").delete(SectionDelete);
+router.route("/course/delete").delete(CourseDelete);
 module.exports = router;

@@ -57,7 +57,7 @@ const Topic = () => {
         <Typography variant="h4" component="h2" className="mb-4 text-gray-800 lg:text-5xl">
           {SectionName}
         </Typography>
-        <AddTopicBtn part={"Topic"} course={parameter[0].course} section={parameter[1].section} /><Button onClick={fetchData}>refresh</Button>
+        <AddTopicBtn refreshData = {fetchData} part={"Topic"} course={parameter[0].course} section={parameter[1].section} /><Button onClick={fetchData}>refresh</Button>
         <Typography variant="h6" component="p" className="text-gray-500 md:text-lg">
           Select Any Topic
         </Typography>
@@ -84,6 +84,7 @@ const Topic = () => {
                 elem={elem}
                 courseName={parameter[0].course.label}
                 sectionId = {parameter[1].section.value}
+                refreshData = {fetchData}
               />
             );
           })}

@@ -30,9 +30,9 @@ const AddContentBtn = ({part, course, section, Topic, refreshData}) => {
             return alert("Please add Some content");
         }
         let result = AddContentApi(subtopics, section, Topic, course);
-        if (result)
+        if (result){
             setSubtopics([]);
-        if (part === 'ContentPage') {
+            setModalOpen(false);
             refreshData();
         }
         // Handle your form submission here

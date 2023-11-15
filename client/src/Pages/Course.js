@@ -34,6 +34,12 @@ const Course = () => {
         }
     };
 
+    const filteredSections = courses.filter((elem) => {
+    const courseName = elem.name.toLowerCase();
+    const query = searchText.toLowerCase();
+    return courseName.includes(query);
+  });
+
     useEffect(() => {
         getStatusOfLoggedIn();
         fetchData();
@@ -46,7 +52,7 @@ const Course = () => {
         <Container maxWidth="xl">
             <div className="my-6 sm:my-8 lg:my-12 text-center">
 
-                <AddCourseBtn /> <Button onClick={fetchData}>refresh</Button>
+                <AddCourseBtn refreshData={fetchData} /> <Button onClick={fetchData}>refresh</Button>
 
                 <Typography variant="h4" component="h2" className="mb-4 text-gray-800 lg:text-5xl">
                     Our Courses
@@ -58,20 +64,22 @@ const Course = () => {
             <TextField
                 label="Search Courses"
                 variant="outlined"
+                value={searchText}
                 fullWidth
                 className="mb-4"
-                value={(e) => setsearchText(e.target.value)}
+                onChange={(e) => setsearchText(e.target.value)}
             />
-            {courses.length === 0 ? (
+            {filteredSections.length === 0 ? (
                 <NoDataFoundComponent />
             ) : (
                 <Grid container spacing={4}>
-                    {courses.map((elem) => {
-                        if (elem.name.indexOf(searchText) !== -1)
+                    {filteredSections.map((elem) => {
+                        
                             return (
                                 <Box
                                     title="course"
                                     elem={elem}
+                                    refreshData = {fetchData}
                                 />
                             );
                     })}

@@ -1,40 +1,38 @@
 const mongoose = require("mongoose");
-const contentSchema = new mongoose.Schema({
 
+const contentSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
     },
     content: {
         type: String,
-        required: true
+        required: true,
     },
     url: {
-        type: String
+        type: String,
     },
     createdDate: {
         type: Date,
-        default: Date.now
-    }
+        default: Date.now,
+    },
 });
+
 const topicSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
-        unique: true, // Enforce uniqueness within the context of the section
+        unique:false
     },
     createdDate: {
         type: Date,
         default: Date.now(),
     },
-    content: [contentSchema]
+    content: [contentSchema],
 });
 
 const sectionSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
-        unique: true, // Enforce uniqueness within the context of the course
+        default:"Asyuh"
     },
     Topics: {
         type: Number,
@@ -44,7 +42,7 @@ const sectionSchema = new mongoose.Schema({
         type: Date,
         default: Date.now(),
     },
-    Topic: [topicSchema], // Include the topic sub-schema
+    Topic: [topicSchema],
 });
 
 const courseStructure = new mongoose.Schema({
@@ -66,15 +64,10 @@ const courseStructure = new mongoose.Schema({
         type: Date,
         default: Date.now(),
     },
-    sections: [sectionSchema], // Include the section sub-schema
+    sections: [sectionSchema],
 });
+courseStructure.index({ 'sections.Topic.name': 1 }, { unique: false });
 
-courseStructure.methods.addSection = function (sectionName) {
-    console.log(this);
-    this.sections = this.sections.concat({name: sectionName});
-    this.save();
-    return this;
-};
 
 const Course = mongoose.models.courses || mongoose.model("courses", courseStructure);
 module.exports = Course;

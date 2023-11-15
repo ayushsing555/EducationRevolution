@@ -48,10 +48,12 @@ export async function AddSectionApi(courseName, sectionName) {
         console.log("Response Data:", data.success);
 
         if (data.success) {
-            return alert(data.message);
+             alert(data.message);
+             return (true);
         }
         else {
-            return alert(data.error);
+             alert(data.error);
+             return false;
         }
     } catch (error) {
         // Handle errors here
