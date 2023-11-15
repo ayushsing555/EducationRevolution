@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import LoadingComponent from '../Component/Loading';
 import {getContent} from '../Component/ApiFunctions/getAllCourses';
-import {Container,Button,TextField, Typography} from '@mui/material';
+import {Container, Button, TextField, Typography} from '@mui/material';
 import {Link} from 'react-router-dom';
 import NoDataFound from '../Component/NoDataFound';
 import ContentBox from '../Component/ContentBox';
@@ -12,8 +12,8 @@ const Content = () => {
   const [content, setContent] = useState([]);
   const [loading, setLoading] = useState(true);
   const [subtopic, setSubtopicName] = useState('');
-  const [Parameter,AllParamter] =  useState(null);
-  const [searchText,setsearchText] = useState("");
+  const [Parameter, AllParamter] = useState(null);
+  const [searchText, setsearchText] = useState("");
   const fetchData = async () => {
     try {
       let result = await getContent(name, sectionId, TopicId);
@@ -28,11 +28,11 @@ const Content = () => {
     }
   };
 
-  const filteredData = content.filter((elem)=>{
+  const filteredData = content.filter((elem) => {
     const contentName = elem.name.toLowerCase();
     const query = searchText.toLowerCase();
     return contentName.includes(query);
-  })
+  });
   useEffect(() => {
     fetchData();
   }, [name, sectionId, TopicId]);
@@ -47,29 +47,29 @@ const Content = () => {
         <Typography variant="h4" component="h2" className="mb-4 text-gray-800 lg:text-5xl">
           {subtopic}
         </Typography>
-        <AddContentBtn  part="ContentPage" course={Parameter[0].course} section={Parameter[1].section} Topic={Parameter[2].topic} refreshData={fetchData}/><Button onClick={fetchData}>refresh</Button>
+        <AddContentBtn part="ContentPage" course={Parameter[0].course} section={Parameter[1].section} Topic={Parameter[2].topic} refreshData={fetchData} /><Button onClick={fetchData}>refresh</Button>
         <Link to={`/course/${name}/${sectionId}`} className="text-indigo-500 hover:underline">
           Back to topic
         </Link>
       </div>
       <TextField
-                label="Search Content"
-                variant="outlined"
-                value={searchText}
-                fullWidth
-                className="mb-4"
-                onChange={(e) => setsearchText(e.target.value)}
-            />
+        label="Search Content"
+        variant="outlined"
+        value={searchText}
+        fullWidth
+        className="mb-4"
+        onChange={(e) => setsearchText(e.target.value)}
+      />
       {filteredData.length === 0 ? (
         <NoDataFound />
       ) : (
         filteredData.map((elem, index) => {
           return (
-            <ContentBox elem={elem} index={index} name={name} sectionId={sectionId} topicId = {TopicId} RefreshData = {fetchData} />
+            <ContentBox elem={elem} index={index} name={name} sectionId={sectionId} topicId={TopicId} RefreshData={fetchData} />
           );
         })
       )}
-       
+
     </Container>
   );
 };
