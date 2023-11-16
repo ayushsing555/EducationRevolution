@@ -18,6 +18,7 @@ import Quiz from './Pages/Quiz';
 import Topic from './Pages/Topic';
 import ContentPage from './Pages/content';
 import Footer from './Component/Footer';
+import SingleStudent from './Component/SingleStudent';
 const App = () => {
   const [isLoggedIn, setLoggedIn] = useState(false);
   // Callback function to update the 'isLoggedIn' state
@@ -38,11 +39,12 @@ const App = () => {
           <Route path='/course/' element={<Course />} />
           <Route path='/course/:name' element={<Section />} />
           <Route path='/admin' element={<Admin/>}/>
-          <Route path='/admin/student' element={<Student/>}/>
+          <Route path='/admin/students' element={<Student/>}/>
           <Route path='/admin/content' element={<Content/>}/>
           <Route path='/quiz' element={<Quiz/>}/>
           <Route path='/course/:name/:sectionId' element={<Topic/>}/>
           <Route path='/course/:name/:sectionId/:TopicId' element={<ContentPage/>}/>
+          <Route path='/admin/students/:id' element={<SingleStudent/>}/>
         </Routes>
         <Footer/>
       </BrowserRouter>

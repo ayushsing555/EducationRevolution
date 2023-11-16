@@ -78,3 +78,16 @@ export async function getContent(courseName, SectionId, TopicId) {
         }
     }
 }
+
+export async function getAllUsers() {
+    let headersList = {
+        "Accept": "*/*",
+        "Content-Type": "application/json"
+    };
+    const response = await fetch("http://localhost:8000/users", {
+        method: "get",
+        headers: headersList
+    });
+    const data = await response.json();
+    return data;
+}

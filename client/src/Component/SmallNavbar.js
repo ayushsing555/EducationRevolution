@@ -17,7 +17,7 @@ const SmallNavbar = () => {
       </li>:<li>
         
             <button className='btn bg-blue-500 rounded hover:bg-blue-400 text-white p-2'>
-                <Link to="/admin/student" class="">
+                <Link to="/admin/students" class="">
                 Go to students
                 </Link>
             </button>

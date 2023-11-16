@@ -1,7 +1,8 @@
 import React from 'react'
 import { useState } from 'react'
-import   {useNavigate} from 'react-router-dom';
+import   {Link, useNavigate} from 'react-router-dom';
 import { validEmail } from '../Component/ValidEmail';
+
 const Signin = ({functionCall}) => {
     const router = useNavigate();
     const [userDetail,setUserDetail] = useState({
@@ -40,7 +41,7 @@ const Signin = ({functionCall}) => {
                 localStorage.setItem("token",JSON.stringify(data.token));
                 localStorage.setItem("name",JSON.stringify(data.name));
                 functionCall(true);
-                router("/course");
+                window.location.href = '/';
             }
             else{
                 return alert("Invalid credentials");
