@@ -51,29 +51,29 @@ const loginUser = async (req, res) => {
     }
     const token = await isExist.generateToken();
     const g = await res.cookie("token", token);
-    return res.status(200).send({success: true, token: token, name: isExist.name, message: "Successfully logged in"});
+    return res.status(200).send({success: true, token: token, name: isExist.name, email: isExist.email, message: "Successfully logged in"});
 };
 
 const AddCourse = async (req, res) => {
     try {
-    const { name } = req.body;
-    const id = ShortPassword();
-    
-    // Create a new course with an empty array of sections
-    const newCourse = new Course({ name, id});
+        const {name} = req.body;
+        const id = ShortPassword();
 
-    // Save the course
-    console.log(newCourse);
-    const generatedCourse = await newCourse.save();
-    console.log(generatedCourse);
+        // Create a new course with an empty array of sections
+        const newCourse = new Course({name, id});
 
-    if (generatedCourse) {
-        return res.status(200).send({ success: true, message: "successfully added" });
+        // Save the course
+        console.log(newCourse);
+        const generatedCourse = await newCourse.save();
+        console.log(generatedCourse);
+
+        if (generatedCourse) {
+            return res.status(200).send({success: true, message: "successfully added"});
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(400).send({success: false, error: "something went wrong"});
     }
-} catch (error) {
-    console.log(error);
-    return res.status(400).send({ success: false, error: "something went wrong" });
-}
 
 };
 
@@ -86,20 +86,20 @@ const AddSection = async (req, res) => {
         }
 
         const newSection = {
-            name:sectionName,
-        }
+            name: sectionName,
+        };
         existingCourse.sections.push(newSection);
 
         await existingCourse.save();
 
         return res.status(200).send({success: true, message: "Topic added to the section successfully."});
     }
-    catch(err){
+    catch (err) {
         console.error("Error:", err);
         return res.status(400).send({success: false, message: "something went wrong"});
     }
-    
-        // Attempt to add the section to the course
+
+    // Attempt to add the section to the course
     //     try {
     //         const newSection = existingCourse.addSection(sectionName);
 
@@ -397,7 +397,7 @@ const SectionDelete = async (req, res) => {
         const course = await Course.findOne({name: name});
 
         if (!course) {
-            return res.status(400).send({success: true, error: "Something went wrong"});
+            return res.status(400).send({success: false, error: "Something went wrong"});
 
         }
         const sectionIndex = course.sections.findIndex((s) => s._id.toString() === sectionId);
@@ -415,11 +415,11 @@ const SectionDelete = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        return res.status(400).send({success: true, error: "Something went wrong"});
+        return res.status(400).send({success: false, error: "Something went wrong"});
     }
 };
 
-const CourseDelete = async(req,res) =>{
+const CourseDelete = async (req, res) => {
     const {name} = req.body;
     try {
         await Course.findOneAndDelete({name: name});
@@ -428,5 +428,13 @@ const CourseDelete = async(req,res) =>{
         console.log(error);
         return res.status(400).send({success: false, error: "Something went wrong"});
     }
-}
-module.exports = {getUsers, ContentDelete, SectionDelete,CourseDelete, TopicDelete, ContentUpdate, CourseUpdate, SectionUpdate, TopicUpdate, AddTopic, AddContent, getCourse, getOneCourse, AddSection, AddCourse, SendOtp, registerUser, loginUser};
+};
+
+const getSingleUser = async (req, res) => {
+    const email = req.params.id;
+    const existingUser = await User.findOne({email});
+    res.send(existingUser);
+};
+
+
+module.exports = {getUsers, getSingleUser, ContentDelete, SectionDelete, CourseDelete, TopicDelete, ContentUpdate, CourseUpdate, SectionUpdate, TopicUpdate, AddTopic, AddContent, getCourse, getOneCourse, AddSection, AddCourse, SendOtp, registerUser, loginUser};

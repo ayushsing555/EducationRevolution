@@ -6,7 +6,7 @@ const Navbar = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const user = localStorage.getItem('name');
+        const user = localStorage.getItem('Detail');
         if (user !== null) {
             setLoggedIn(true);
         }
@@ -37,8 +37,8 @@ const Navbar = () => {
                             </> : <>
                                 <Link onClick={logout} className="text-white hover:underline mx-4">logout</Link>
                                 <Link to="/course" className='text-white hover:underline mx-4'>Courses</Link>
-                                <Link to="/quiz"className='text-white hover:underline mx-4'>Quiz</Link>
-                                <Link to ='/admin' className='text-white hovdr:underline mx-4'>Admin</Link>
+                                <Link to ='/admin' className='text-white hover:underline mx-4'>Admin</Link>
+                                <Link to='/DailyQuiz'className='text-white hover:underline mx-4'>Daily Quiz</Link>
                             </>
                         }
                     </div>

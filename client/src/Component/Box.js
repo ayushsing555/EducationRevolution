@@ -8,6 +8,9 @@ import {Link} from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import {toast, ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import QuizIcon from '@mui/icons-material/Quiz';
+import {Tooltip} from '@mui/material';
+
 const Box = ({title, elem, courseName, sectionId, TopicId, refreshData}) => {
     const [isAdmin, SetIsAdmin] = useState(true);
     const [isLoading, SetIsloading] = useState(false);
@@ -183,27 +186,53 @@ const Box = ({title, elem, courseName, sectionId, TopicId, refreshData}) => {
                                         <Link to={`/course/${elem.name}`} className="hover:text-indigo-500 active:text-indigo-600">
                                             {elem.name}
                                         </Link>
+                                        <Tooltip title="Open Quiz" arrow>
+                                            <Link to={`/course/${courseName}/${elem._id}/`} className="hover:text-indigo-500 active:text-indigo-600">
+                                                <IconButton color="yellow" onClick={() => LinkCopy(`http://localhost:3000/course/${elem.name}`)}>
+                                                    <QuizIcon />
+                                                </IconButton>
+                                            </Link>
+                                        </Tooltip>
+                                        <Tooltip titile='Copy Link'>
                                         <IconButton color="error" onClick={() => LinkCopy(`http://localhost:3000/course/${elem.name}`)}>
                                             <Share />
                                         </IconButton>
+                                        </Tooltip>
                                     </>
                                     ) : title === 'section' ? (<>
                                         <Link to={`/course/${courseName}/${elem._id}/`} className="hover:text-indigo-500 active:text-indigo-600">
                                             {elem.name}
                                         </Link>
-                                        <IconButton color="error" onClick={() => LinkCopy(`http://localhost:3000/course/${courseName}/${elem._id}/`)}>
+                                        <Tooltip title="Open Quiz" arrow>
+                                            <Link to={`/course/${courseName}/${elem._id}/`} className="hover:text-indigo-500 active:text-indigo-600">
+                                                <IconButton color="yellow" onClick={() => LinkCopy(`http://localhost:3000/course/${elem.name}`)}>
+                                                    <QuizIcon />
+                                                </IconButton>
+                                            </Link>
+                                        </Tooltip>
+                                        <Tooltip title="Copy Link" arrow>
+                                        <IconButton color="error" onClick={() => LinkCopy(`http://localhost:3000/course/${elem.name}`)}>
                                             <Share />
                                         </IconButton>
-
+                                        </Tooltip>
                                     </>
                                     ) : (
                                         <>
                                             <Link to={`/course/${courseName}/${sectionId}/${elem._id}`} className="hover:text-indigo-500 active:text-indigo-600">
                                                 {elem.name}
                                             </Link>
+                                            <Tooltip title="Open Quiz" arrow>
+                                                <Link to={`/course/${courseName}/${elem._id}/`} className="hover:text-indigo-500 active:text-indigo-600">
+                                                    <IconButton color="yellow" onClick={() => LinkCopy(`http://localhost:3000/course/${elem.name}`)}>
+                                                        <QuizIcon />
+                                                    </IconButton>
+                                                </Link>
+                                            </Tooltip>
+                                            <Tooltip title="Copy Link" arrow>
                                             <IconButton color="error" onClick={() => LinkCopy(`http://localhost:3000/course/${courseName}/${sectionId}/${elem._id}`)}>
                                                 <Share />
                                             </IconButton>
+                                            </Tooltip>
                                             <IconButton color="primary" onClick={() => downloadBulkDataWithStyle(elem)}>
                                                 <CloudDownloadIcon />
                                             </IconButton>
@@ -240,21 +269,29 @@ const Box = ({title, elem, courseName, sectionId, TopicId, refreshData}) => {
                                             { /* If editing is not in progress, show the Edit button */}
                                             {!isEditing && (
                                                 <>
+                                                   <Tooltip title='Update'>
                                                     <IconButton color="primary" onClick={() => handleUpdate(elem.name)}>
                                                         <Edit />
                                                     </IconButton>
-                                                    <IconButton color="error" onClick={() => handleDelete(elem.name)}>
+                                                   </Tooltip>
+                                                    <Tooltip title='Delete'>
+                                                        <IconButton color="error" onClick={() => handleDelete(elem.name)}>
                                                         <Delete />
                                                     </IconButton>
+                                                    </Tooltip>
+                                                    
 
                                                 </>
                                             )}
                                             { /* If editing is in progress, show the Done button */}
                                             {isEditing && (
                                                 <>
+                                                   <Tooltip title='Done'>
                                                     <IconButton color="success" onClick={() => handleDone(elem.name)}>
                                                         <DoneIcon />
                                                     </IconButton>
+                                                   </Tooltip>
+                                                    
                                                 </>
                                             )}
                                         </>

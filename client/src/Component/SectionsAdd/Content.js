@@ -6,7 +6,7 @@ import {getAllCourses, getIndividualCourse,getTopicsAndSectionName} from '../Api
 import AddContentBtn from "../AddContentBtn";
 import Select from 'react-select';
 import { Typography } from '@mui/material';
-
+import AddQuizBtn from '../QuizAdmin/AddContentQuizBtn';
 const ContentArea = () => {
     const [course, setCourse] = useState([]);
     const [selectedCourse, setSelectedCourse] = useState(null);
@@ -105,7 +105,8 @@ const ContentArea = () => {
                         <IoMdRefresh />
                     </button>
                     {/* <!-- Add additional dropdowns here if needed --> */}
-                    <AddContentBtn part="Topic" course={selectedCourse} section={selectedSection} Topic={selectTopic}  />
+                    <AddContentBtn part="Topic" course={selectedCourse} section={selectedSection} Topic={selectTopic} refreshData={fetchData} />
+                    <AddQuizBtn part="Topic" course={selectedCourse} section={selectedSection} Topic={selectTopic}  />
                 </div>
             </div>
         </>

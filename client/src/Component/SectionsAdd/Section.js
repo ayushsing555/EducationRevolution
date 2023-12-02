@@ -3,7 +3,8 @@ import AddSectionBtn from '../AddSectionBtn';
 import {getAllCourses} from '../ApiFunctions/getAllCourses';
 import Select from 'react-select';
 import {IoMdRefresh} from 'react-icons/io';
-import { Typography } from '@mui/material';
+import {Typography} from '@mui/material';
+import AddCourseQuizBtn from '../QuizAdmin/AddCourseQuizBtn';
 const Section = () => {
   const [course, setCourse] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -24,7 +25,7 @@ const Section = () => {
   return (
     <>
       <div className="bg-blue-100 p-4">
-       <Typography variant="h4" component="h1" align="center" gutterBottom>
+        <Typography variant="h4" component="h1" align="center" gutterBottom>
           Add Section
         </Typography>
         <div className="flex justify-around">
@@ -41,7 +42,8 @@ const Section = () => {
             <IoMdRefresh />
           </button>
           {/* <!-- Add additional dropdowns here if needed --> */}
-          <AddSectionBtn part="section" course={selectedCourse} />
+          <AddSectionBtn part="section" course={selectedCourse} refreshData={fetchData} />
+          <AddCourseQuizBtn part="Topic" course={selectedCourse} />
         </div>
       </div>
     </>

@@ -7,6 +7,7 @@ import {Link} from 'react-router-dom';
 import NoDataFound from '../Component/NoDataFound';
 import ContentBox from '../Component/ContentBox';
 import AddContentBtn from '../Component/AddContentBtn';
+import AddContentQuizBtn from '../Component/QuizAdmin/AddContentQuizBtn';
 const Content = () => {
   const {name, sectionId, TopicId} = useParams();
   const [content, setContent] = useState([]);
@@ -44,10 +45,27 @@ const Content = () => {
   return (
     <Container maxWidth="xl">
       <div className="my-6 sm:my-8 lg:my-12 text-center">
-        <Typography variant="h4" component="h2" className="mb-4 text-gray-800 lg:text-5xl">
-          {subtopic}
-        </Typography>
-        <AddContentBtn part="ContentPage" course={Parameter[0].course} section={Parameter[1].section} Topic={Parameter[2].topic} refreshData={fetchData} /><Button onClick={fetchData}>refresh</Button>
+        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+          <Typography variant="h4" component="h2" className="mb-4 text-gray-800 lg:text-5xl">
+            {subtopic}
+          </Typography>
+          <div style={{display: 'flex', alignItems: 'center'}}>
+            <AddContentBtn
+              part="ContentPage"
+              course={Parameter[0].course}
+              section={Parameter[1].section}
+              Topic={Parameter[2].topic}
+              refreshData={fetchData}
+            />
+            <AddContentQuizBtn
+              part="ContentPage"
+              course={Parameter[0].course}
+              section={Parameter[1].section}
+              Topic={Parameter[2].topic}
+            />
+          </div>
+        </div>
+        <Button onClick={fetchData}>refresh</Button>
         <Link to={`/course/${name}/${sectionId}`} className="text-indigo-500 hover:underline">
           Back to topic
         </Link>

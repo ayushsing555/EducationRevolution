@@ -2,6 +2,9 @@ import React from 'react';
 import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import { validEmail } from '../Component/ValidEmail';
+import 'react-toastify/dist/ReactToastify.css';
+import {toast, ToastContainer} from 'react-toastify';
+import { GetPasswordFun } from '../Component/Functionality/GetPasswordFun';
 const Signup = () => {
     const router = useNavigate();
     const [showEmail, setShowEmail] = useState(true);
@@ -20,7 +23,6 @@ const Signup = () => {
 
     const sendOtp = async (event) => {
         event.preventDefault();
-        change(event);
         if (userDetail.password !== userDetail.cpassword) {
             return alert("Password doesn't match");
         }
@@ -30,6 +32,7 @@ const Signup = () => {
         if (userDetail.email === "") {
             return alert("please enter valid email");
         }
+        change(event);
         event.preventDefault();
         let headersList = {
             "Accept": "*/*",
@@ -48,6 +51,10 @@ const Signup = () => {
         const data = await response.json();
         console.log(data);
         if (data.result) {
+            toast.success('Otp Sent your Email', {
+            position: 'bottom-right',
+            autoClose: 2000, // Time in milliseconds, set to 0 to disable auto-close
+        });
             setOtp(data.otp);
         }
         else{
@@ -60,6 +67,16 @@ const Signup = () => {
         setShowEmail(!showEmail);
         setShowOtp(!showOtp);
     };
+
+    const GetPassword = (e) =>{
+        e.preventDefault();
+        const password = GetPasswordFun();
+        console.log(password); 
+        setUserDetail({...userDetail,
+        password:password,
+        cpassword:password
+        });
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -123,8 +140,9 @@ const Signup = () => {
                         </div>
                         <div className="mb-4">
                             <label htmlFor="password" className="block text-gray-600 font-medium">Password</label>
-                            <input value={userDetail.password} onChange={handleChange} type="password" id="password" name="password" className="w-full border p-2 rounded" />
+                            <input value={userDetail.password} onChange={handleChange} type="text" id="password" name="password" className="w-full border p-2 rounded" />
                         </div>
+                                <button type="submit" onClick={GetPassword} className="bg-blue-400 text-white rounded p-1 w-full hover:bg-blue-600">Suggest Password</button>
                         <div className="mb-4">
                             <label htmlFor="cpassword" className="block text-gray-600 font-medium">Confirm Password</label>
                             <input value={userDetail.cpassword} onChange={handleChange} type="password" id="password" name="cpassword" className="w-full border p-2 rounded" />
@@ -143,6 +161,7 @@ const Signup = () => {
                     </form>
                 </div>
             </div>
+            <ToastContainer/>
         </>
     );
 };

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams, Link} from 'react-router-dom';
-import {LoggedInOrNot} from '../Component/LoggedInOrNot';
+
 import {getTopicsAndSectionName} from '../Component/ApiFunctions/getAllCourses';
 import {Container, Typography, Button, Grid, TextField} from '@mui/material';
 
@@ -8,9 +8,10 @@ import AddTopicBtn from '../Component/AddTopicBtn';
 import LoadingComponent from '../Component/Loading';
 import NoDataFoundComponent from '../Component/NoDataFound';
 import Box from '../Component/Box';
+import AddSectionQuizBtn from '../Component/QuizAdmin/AddSectionQuizBtn';
+import {getUserDetail} from '../Component/Functionality/GetUserDetail';
 const Topic = () => {
   const {name, sectionId} = useParams();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [Topics, setTopics] = useState([]);
   const [SectionName, setSectionName] = useState("");
@@ -18,11 +19,10 @@ const Topic = () => {
   const navigate = useNavigate();
   const [parameter, setParameter] = useState([]);
   const getStatusOfLoggedIn = () => {
-    let loggedInOrNot = LoggedInOrNot();
-    if (!loggedInOrNot) {
+    let loggedInOrNot = getUserDetail();
+    if (loggedInOrNot==null) {
       navigate('/signin');
     }
-    setIsLoggedIn(loggedInOrNot);
   };
 
   const fetchData = async () => {
@@ -39,7 +39,7 @@ const Topic = () => {
     getStatusOfLoggedIn();
   }, []);
 
-  
+
 
   const filteredTopic = Topics.filter((section) => {
     const sectionName = section.name.toLowerCase();
@@ -54,10 +54,16 @@ const Topic = () => {
   return (
     <Container maxWidth="xl">
       <div className="my-6 sm:my-8 lg:my-12 text-center">
-        <Typography variant="h4" component="h2" className="mb-4 text-gray-800 lg:text-5xl">
-          {SectionName}
-        </Typography>
-        <AddTopicBtn refreshData = {fetchData} part={"Topic"} course={parameter[0].course} section={parameter[1].section} /><Button onClick={fetchData}>refresh</Button>
+        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+          <Typography variant="h4" component="h2" className="mb-4 text-gray-800 lg:text-5xl">
+            {SectionName}
+          </Typography>
+          <div style={{display: 'flex', alignItems: 'center'}}>
+            <AddTopicBtn refreshData={fetchData} part="Topic" course={parameter[0].course} section={parameter[1].section} />
+            <AddSectionQuizBtn part="Topic" course={parameter[0].course} section={parameter[1].section} />
+          </div>
+        </div>
+        <Button onClick={fetchData}>refresh</Button>
         <Typography variant="h6" component="p" className="text-gray-500 md:text-lg">
           Select Any Topic
         </Typography>
@@ -83,8 +89,8 @@ const Topic = () => {
                 title="topic"
                 elem={elem}
                 courseName={parameter[0].course.label}
-                sectionId = {parameter[1].section.value}
-                refreshData = {fetchData}
+                sectionId={parameter[1].section.value}
+                refreshData={fetchData}
               />
             );
           })}

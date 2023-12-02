@@ -91,3 +91,17 @@ export async function getAllUsers() {
     const data = await response.json();
     return data;
 }
+
+export async function getSingleUserDetail(email){
+    let headersList = {
+        "Accept": "*/*",
+        "Content-Type": "application/json"
+    };
+    const response = await fetch(`http://localhost:8000/users/${email}`, {
+        method: "get",
+        headers: headersList
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+}

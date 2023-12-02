@@ -38,8 +38,8 @@ const Signin = ({functionCall}) => {
         const data = await response.json();
             if(data.success){
                 alert("successfully logged in");
-                localStorage.setItem("token",JSON.stringify(data.token));
-                localStorage.setItem("name",JSON.stringify(data.name));
+                localStorage.setItem("Detail",JSON.stringify(data));
+                
                 functionCall(true);
                 window.location.href = '/';
             }
