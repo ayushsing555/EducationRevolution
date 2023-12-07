@@ -1,15 +1,16 @@
-import React, {useState, useEffect} from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
-import {makeStyles} from '@material-ui/core/styles';
-import { Radio, Button, Container, Paper} from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
+import { Radio, Button, Paper } from '@material-ui/core';
 import { Typography } from '@mui/material';
 import LoadingComponent from '../Component/Loading';
 import NoDataFound from '../Component/NoDataFound';
-import {getQuizForDate} from '../Component/ApiFunctions/getQuizData';
 import QuizResult from '../Component/QuizSection/QuizResult';
-import {sendResult} from '../Component/ApiFunctions/AddQuizApi';
-import {toast, ToastContainer} from 'react-toastify';
+import { getQuizForDate } from '../Component/ApiFunctions/getQuizData';
+import { sendResult } from '../Component/ApiFunctions/AddQuizApi';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 const useStyles = makeStyles((theme) => ({
   quizContainer: {
     padding: theme.spacing(3),
@@ -22,6 +23,12 @@ const useStyles = makeStyles((theme) => ({
     color: 'red',
     fontWeight: 'bold',
     marginBottom: theme.spacing(1),
+    WebkitTouchCallout: 'none', /* iOS Safari */
+    WebkitUserSelect: 'none', /* Safari */
+    KhtmlUserSelect: 'none', /* Konqueror HTML */
+    MozUserSelect: 'none', /* Old versions of Firefox */
+    MsUserSelect: 'none', /* Internet Explorer/Edge */
+    userSelect: 'none', /* Non-prefixed version, currently supported by Chrome, Edge, Opera, and Firefox */
   },
   optionsContainer: {
     margin: theme.spacing(2, 0),
@@ -31,6 +38,12 @@ const useStyles = makeStyles((theme) => ({
     color: 'blue',
     alignItems: 'center',
     margin: theme.spacing(1, 0),
+    WebkitTouchCallout: 'none', /* iOS Safari */
+    WebkitUserSelect: 'none', /* Safari */
+    KhtmlUserSelect: 'none', /* Konqueror HTML */
+    MozUserSelect: 'none', /* Old versions of Firefox */
+    MsUserSelect: 'none', /* Internet Explorer/Edge */
+    userSelect: 'none', /* Non-prefixed version, currently supported by Chrome, Edge, Opera, and Firefox */
   },
   submitButton: {
     margin: theme.spacing(2, 0),
@@ -45,6 +58,14 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'bold',
     marginTop: theme.spacing(2),
   },
+  unselectable: {
+    WebkitTouchCallout: 'none', /* iOS Safari */
+    WebkitUserSelect: 'none', /* Safari */
+    KhtmlUserSelect: 'none', /* Konqueror HTML */
+    MozUserSelect: 'none', /* Old versions of Firefox */
+    MsUserSelect: 'none', /* Internet Explorer/Edge */
+    userSelect: 'none', /* Non-prefixed version, currently supported by Chrome, Edge, Opera, and Firefox */
+  },
 }));
 
 const QuizPage = () => {
@@ -53,12 +74,14 @@ const QuizPage = () => {
   const [quizData, setQuizData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userAnswers, setUserAnswers] = useState({});
-  const {day, month, year} = useParams();
+  const { day, month, year } = useParams();
   const formattedDate = new Date(`${month}/${day}/${year}`);
   const [show, setShow] = useState(true);
   const [score, setScore] = useState(0);
+  const [timer, setTimer] = useState(720); // 12 minutes in seconds
 
   const isCurrentDay = new Date().toDateString() === formattedDate.toDateString();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -71,15 +94,39 @@ const QuizPage = () => {
       }
     };
     fetchData();
-  }, [1]);
+  }, [formattedDate]);
+
   useEffect(() => {
     const updateScore = async () => {
       const scores = await calculateScore();
       setScore(scores);
     };
 
-    updateScore(); // Call the function to update the score
+    updateScore();
   }, [userAnswers]);
+
+  useEffect(() => {
+    const timerInterval = setInterval(() => {
+      setTimer((prevTimer) => prevTimer - 1);
+    }, 1000);
+
+    return () => clearInterval(timerInterval);
+  }, []);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        // Auto-submit when the tab is switched
+        handleQuizSubmit(quizData);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [quizData]);
 
   const handleOptionChange = (questionId, selectedOption) => {
     setUserAnswers((prevAnswers) => ({
@@ -96,14 +143,13 @@ const QuizPage = () => {
     if (result === true) {
       toast.success('Link Copied!', {
         position: 'bottom-right',
-        autoClose: 2000, // Time in milliseconds, set to 0 to disable auto-close
+        autoClose: 2000,
       });
       setShow(false);
-    }
-    else {
+    } else {
       toast.error("can't submit twice in a day", {
         position: 'bottom-right',
-        autoClose: 2000, // Time in milliseconds, set to 0 to disable auto-close
+        autoClose: 2000,
       });
     }
   };
@@ -129,53 +175,50 @@ const QuizPage = () => {
     return userScore;
   };
 
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+  };
+
   return (
-    
-    <Container className={classes.quizContainer}>
-      {loading ? (
-        <LoadingComponent />
-      ) : quizData.length === 0 ? (
-        <NoDataFound />
-      ) : (
+    <div>
+      <Typography variant="h5" className={classes.dateText}>
+        {formattedDate.toDateString()} - Time Remaining: {formatTime(timer)}
+      </Typography>
+      {show ? (
         <>
-          <Typography variant="h5" className={classes.dateText}>
-            {formattedDate.toDateString()}
-          </Typography>
-          {show ? (
-            <>
-              {quizData[0].quiz.map((elem, index) => (
-                <Paper key={elem._id} elevation={3} className={classes.optionsContainer}>
-                  <Typography variant="h6" className={classes.question}>
-                    Question {index + 1}: {elem.questionName}
-                  </Typography>
-                  {elem.options.map((option, optionIndex) => (
-                    <div key={optionIndex} className={classes.option}>
-                      <Radio
-                        color="primary"
-                        checked={userAnswers[elem._id] === option}
-                        onChange={() => handleOptionChange(elem._id, option)}
-                      />
-                      <Typography>{option}</Typography>
-                    </div>
-                  ))}
-                </Paper>
+          {quizData[0]?.quiz?.map((elem, index) => (
+            <Paper key={elem._id} elevation={3} className={classes.optionsContainer}>
+              <Typography variant="h6" className={`${classes.question} ${classes.unselectable}`}>
+                Question {index + 1}: {elem.questionName}
+              </Typography>
+              {elem.options.map((option, optionIndex) => (
+                <div key={optionIndex} className={`${classes.option} ${classes.unselectable}`}>
+                  <Radio
+                    color="primary"
+                    checked={userAnswers[elem._id] === option}
+                    onChange={() => handleOptionChange(elem._id, option)}
+                  />
+                  <Typography className={classes.unselectable}>{option}</Typography>
+                </div>
               ))}
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.submitButton}
-                onClick={() => handleQuizSubmit(quizData)}
-              >
-                Submit Quiz
-              </Button>
-            </>
-          ) : (
-            <QuizResult score={score} isCurrentDay={isCurrentDay} />
-          )}
+            </Paper>
+          ))}
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.submitButton}
+            onClick={() => handleQuizSubmit(quizData)}
+          >
+            Submit Quiz
+          </Button>
         </>
+      ) : (
+        <QuizResult score={score} isCurrentDay={isCurrentDay} />
       )}
       <ToastContainer />
-    </Container>
+    </div>
   );
 };
 
