@@ -66,48 +66,69 @@ const AddCourseQuizBtn = ({part, course, refreshData}) => {
     };
 
     const addQuestion = async () => {
-        console.log(image);
-        if (image !== '') {
-            const result = await isValidImage(image);
-            if (result) {
-                // console.log(isValidImage(image));
-                if (questionName && options.every((opt) => opt !== '') && answer !== '') {
-                    setQuestions([
-                        ...questions,
-                        {
-                            questionName,
-                            options,
-                            answer,
-                            imageUrl: image,
-                        },
-                    ]);
-                    setQuestionName('');
-                    setOptions(['', '', '', '']);
-                    setAnswer('');
-                    setImage('');
-                }
-            } else {
-                alert('Please upload a valid Image Url');
-                setImage('');
+    if (image !== '') {
+        const result = await isValidImage(image);
+        if (result) {
+            // Check if all options are different
+            if (new Set(options).size !== options.length) {
+                alert('Please make sure all options are different.');
+                return;
             }
+
+            // Check if the answer is one of the options
+            if (!options.includes(answer)) {
+                alert('Please make sure the answer is one of the options.');
+                return;
+            }
+
+            // If options are different and answer is valid, add the question
+            setQuestions([
+                ...questions,
+                {
+                    questionName,
+                    options,
+                    answer,
+                    imageUrl: image,
+                },
+            ]);
+            setQuestionName('');
+            setOptions(['', '', '', '']);
+            setAnswer('');
+            setImage('');
         } else {
-            if (questionName && options.every((opt) => opt !== '') && answer !== '') {
-                setQuestions([
-                    ...questions,
-                    {
-                        questionName,
-                        options,
-                        answer,
-                        imageUrl: image,
-                    },
-                ]);
-                setQuestionName('');
-                setOptions(['', '', '', '']);
-                setAnswer('');
-                setImage('');
-            }
+            alert('Please upload a valid Image Url');
+            setImage('');
         }
-    };
+    } else {
+        // Check if all options are different
+        if (new Set(options).size !== options.length) {
+            alert('Please make sure all options are different.');
+            return;
+        }
+
+        // Check if the answer is one of the options
+        if (!options.includes(answer)) {
+            alert('Please make sure the answer is one of the options.');
+            return;
+        }
+
+        // If options are different and answer is valid, add the question
+        setQuestions([
+            ...questions,
+            {
+                questionName,
+                options,
+                answer,
+                imageUrl: image,
+            },
+        ]);
+        setQuestionName('');
+        setOptions(['', '', '', '']);
+        setAnswer('');
+        setImage('');
+    }
+};
+
 
     return (
         <>

@@ -22,6 +22,9 @@ import DailyQuiz from './Pages/DailyQuiz';
 import SingleUserPage from './Component/SingleUserPage';
 import QuizPage from './Pages/QuizPage';
 import DailyQuizAnalysis from './Component/QuizSection/DailyQuizAnalysis';
+import CourseQuiz from './Pages/PracticeQuizes/CourseQuiz';
+import SectionQuiz from './Pages/PracticeQuizes/SectionQuiz';
+import TopicQuiz from './Pages/PracticeQuizes/TopicQuiz'
 const App = () => {
   const [isLoggedIn, setLoggedIn] = useState(false);
   // Callback function to update the 'isLoggedIn' state
@@ -49,6 +52,9 @@ const App = () => {
           <Route path='/course/:name/:sectionId/:TopicId' element={<ContentPage/>}/>
           <Route path='/admin/students/:id' element={<SingleUserPage/>}/>
           <Route path='/DailyQuiz' element={<DailyQuiz/>}/>
+          <Route path='/course/:name/quizes' element={<CourseQuiz/>}/>
+          <Route path='/course/:name/:sectionId/quizes' element={<SectionQuiz/>}/>
+          <Route path='/course/:name/:sectionId/:topicId/quizes' element={<TopicQuiz/>}/>
           <Route path="/dailyQuiz/:day/:month/:year" element={<QuizPage/>}/>
           <Route path="/dailyQuiz/analysis/:day/:month/:year" element={<DailyQuizAnalysis/>}/>
         </Routes>

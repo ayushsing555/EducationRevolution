@@ -187,7 +187,7 @@ const Box = ({title, elem, courseName, sectionId, TopicId, refreshData}) => {
                                             {elem.name}
                                         </Link>
                                         <Tooltip title="Open Quiz" arrow>
-                                            <Link to={`/course/${courseName}/${elem._id}/`} className="hover:text-indigo-500 active:text-indigo-600">
+                                            <Link to={`/course/${elem.name}/quizes`} className="hover:text-indigo-500 active:text-indigo-600">
                                                 <IconButton color="yellow" onClick={() => LinkCopy(`http://localhost:3000/course/${elem.name}`)}>
                                                     <QuizIcon />
                                                 </IconButton>
@@ -204,7 +204,7 @@ const Box = ({title, elem, courseName, sectionId, TopicId, refreshData}) => {
                                             {elem.name}
                                         </Link>
                                         <Tooltip title="Open Quiz" arrow>
-                                            <Link to={`/course/${courseName}/${elem._id}/`} className="hover:text-indigo-500 active:text-indigo-600">
+                                            <Link to={`/course/${courseName}/${elem._id}/quizes`} className="hover:text-indigo-500 active:text-indigo-600">
                                                 <IconButton color="yellow" onClick={() => LinkCopy(`http://localhost:3000/course/${elem.name}`)}>
                                                     <QuizIcon />
                                                 </IconButton>
@@ -222,7 +222,7 @@ const Box = ({title, elem, courseName, sectionId, TopicId, refreshData}) => {
                                                 {elem.name}
                                             </Link>
                                             <Tooltip title="Open Quiz" arrow>
-                                                <Link to={`/course/${courseName}/${elem._id}/`} className="hover:text-indigo-500 active:text-indigo-600">
+                                                <Link to={`/course/${courseName}/${sectionId}/${elem._id}/quizes`} className="hover:text-indigo-500 active:text-indigo-600">
                                                     <IconButton color="yellow" onClick={() => LinkCopy(`http://localhost:3000/course/${elem.name}`)}>
                                                         <QuizIcon />
                                                     </IconButton>

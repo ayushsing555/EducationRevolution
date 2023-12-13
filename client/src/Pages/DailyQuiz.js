@@ -49,6 +49,10 @@ const DailyQuiz = () => {
     fetchQuiz();
   }, []);
 
+  if(loading){
+    return <LoadingComponent/>
+  }
+
   return (
     <Grid container spacing={4} style={{overflowX: 'hidden'}}>
       <Grid item xs={12} md={6}>

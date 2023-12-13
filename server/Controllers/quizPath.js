@@ -113,6 +113,7 @@ const GetAllQuiz = async (req, res) => {
 const GetDailyQuiz = async (req, res) => {
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
+
     try {
         const ExistingQuiz = await DailyQuiz.findOne({date: currentDate});
         if (!ExistingQuiz) {
@@ -140,6 +141,7 @@ const GetDailyQuiz = async (req, res) => {
 const saveResult = async (req, res) => {
     try {
         const {email, score, wrongAnswer, isCurrentDay} = req.body;
+
         const existingUser = await User.findOne({email: email});
         const userAttemptDetail = {
             email: email,
@@ -208,4 +210,66 @@ const saveResult = async (req, res) => {
         return res.status(400).send({success: false, error: "Something went wrong"});
     }
 };
-module.exports = {AddContentQuiz, saveResult, GetDailyQuiz, GetAllQuiz, AddSectionQuiz, AddCourseQuiz};
+
+const getCourseQuiz = async (req, res) => {
+    try {
+        const name = req.params.name;
+        const existingCourse = await Course.findOne({name: name}).exec();
+        if (!existingCourse) {
+            return res.status(400).send({success: false, error: "Course is not found"});
+        }
+        return res.status(200).send({success: true, data: existingCourse.Quizes});
+    }
+    catch (e) {
+        console.log('the error is', e);
+        return res.status(400).send({success: false, error: "Course is not found"});
+
+    }
+};
+
+const getSectionQuiz = async (req, res) => {
+    try {
+        const name = req.params.name;
+        const sectionId = req.params.sectionId;
+        const existingCourse = await Course.findOne({name: name}).exec();
+        if (!existingCourse) {
+            return res.status(400).send({success: false, error: "Course is not found"});
+        }
+        const existingSection = await existingCourse.sections.id(sectionId);
+        return res.status(200).send({success: true, data: existingSection.Quizes});
+    }
+    catch (e) {
+        console.log('the error is', e);
+        return res.status(400).send({success: false, error: "Course is not found"});
+
+    }
+};
+
+const getTopicQuiz = async (req, res) => {
+    try {
+        const name = req.params.name;
+        const sectionId = req.params.sectionId;
+        const topicId = req.params.topicId;
+        const existingCourse = await Course.findOne({name: name}).exec();
+        if (!existingCourse) {
+            return res.status(400).send({success: false, error: "Course is not found"});
+        }
+        const existingSection = await existingCourse.sections.id(sectionId);
+        if (!existingSection) {
+            return res.status(400).send({success: false, error: "section is not found"});
+        }
+
+        const existingTopic = await existingSection.Topic.id(topicId);
+        if (!existingTopic) {
+            return res.status(400).send({success: false, error: "section is not found"});
+        }
+
+        return res.status(200).send({success: true, data: existingTopic.Quizes});
+    }
+    catch (e) {
+        console.log('the error is', e);
+        return res.status(400).send({success: false, error: "Course is not found"});
+
+    }
+};
+module.exports = {AddContentQuiz, getCourseQuiz, getTopicQuiz, getSectionQuiz, saveResult, GetDailyQuiz, GetAllQuiz, AddSectionQuiz, AddCourseQuiz};

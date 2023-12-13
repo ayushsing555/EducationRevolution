@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const {getUsers,registerUser,SendOtp,CourseUpdate,SectionDelete,CourseDelete,getSingleUser,TopicDelete,ContentUpdate,SectionUpdate,TopicUpdate,AddContent,getOneCourse,AddTopic,AddCourse,AddSection,loginUser,getCourse,ContentDelete} = require("../Controllers/path");
-const {AddContentQuiz,AddSectionQuiz,AddCourseQuiz,GetAllQuiz,GetDailyQuiz,saveResult}  = require("../Controllers/quizPath");
+const {AddContentQuiz,AddSectionQuiz,AddCourseQuiz,getTopicQuiz,getSectionQuiz,GetAllQuiz,GetDailyQuiz,saveResult,getCourseQuiz}  = require("../Controllers/quizPath");
 router.route("/users").get(getUsers);
 router.route("/users/:id").get(getSingleUser);
 router.route("/register/user").post(registerUser);
@@ -27,4 +27,7 @@ router.route("/add/course/Quiz").post(AddCourseQuiz);
 router.route("/AllQuiz").get(GetAllQuiz);
 router.route("/dailyQuiz").get(GetDailyQuiz);
 router.route("/saveResult/:id").post(saveResult);
+router.route("/courseQuiz/:name").get(getCourseQuiz);
+router.route("/courseQuiz/:name/:sectionId").get(getSectionQuiz);
+router.route("/courseQuiz/:name/:sectionId/:topicId").get(getTopicQuiz);
 module.exports = router;
