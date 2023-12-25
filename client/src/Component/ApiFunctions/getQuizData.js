@@ -63,3 +63,51 @@ export async function getTopicQuiz(name,sectionId,topicId){
     }
     return false;
 }
+
+export async function getCourseSingleQuiz(name,QuizId){
+    console.log(name,QuizId)
+    let headersList = {
+        "Accept": "*/*",
+        "Content-Type": "application/json"
+    }
+    const response = await fetch(`http://localhost:8000/Quiz/${name}/${QuizId}`,{
+        method:'get',
+        headers:headersList
+    })
+    const data = await response.json();
+    if(data.success){
+        return data.data;
+    }
+    return false;
+}
+export async function getSectionSingleQuiz(name,sectionId,QuizId){
+    console.log(name,sectionId,QuizId);
+    let headersList = {
+        "Accept": "*/*",
+        "Content-Type": "application/json"
+    }
+    const response = await fetch(`http://localhost:8000/Quiz/${name}/${sectionId}/${QuizId}`,{
+        method:'get',
+        headers:headersList
+    })
+    const data = await response.json();
+    if(data.success){
+        return data.data;
+    }
+    return false;
+}
+export async function getTopicSingleQuiz(name,sectionId,TopicId,QuizId){
+    let headersList = {
+        "Accept": "*/*",
+        "Content-Type": "application/json"
+    }
+    const response = await fetch(`http://localhost:8000/Quiz/${name}/${sectionId}/${TopicId}/${QuizId}`,{
+        method:'get',
+        headers:headersList
+    })
+    const data = await response.json();
+    if(data.success){
+        return data.data;
+    }
+    return false;
+}

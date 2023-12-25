@@ -3,6 +3,7 @@ const AllQuizSchema = require("../models/quiz");
 const DailyQuiz = require("../models/dailyQuiz");
 const {GetQuizId} = require("./tokens/token");
 const User = require("../models/User");
+const RandomQuiz = require("../models/randomQuiz");
 const {getRandomGenerateQuestion} = require("../Controllers/Functions/getRandomGenerateQuestion");
 const AddContentQuiz = async (req, res) => {
     const {Quiz, name, sectionId, topicId, QuizName} = req.body;
@@ -115,19 +116,42 @@ const GetDailyQuiz = async (req, res) => {
     currentDate.setHours(0, 0, 0, 0);
 
     try {
-        const ExistingQuiz = await DailyQuiz.findOne({date: currentDate});
-        if (!ExistingQuiz) {
-            const AllQuestions = await AllQuizSchema.find();
-            const randomGenerateQuestions = getRandomGenerateQuestion(AllQuestions, 4);
-            const newDailyQuiz = new DailyQuiz({
-                date: currentDate,
-                quiz: randomGenerateQuestions
-            });
-            await newDailyQuiz.save();
+        const existingQuiz = await DailyQuiz.findOne({date: currentDate});
+
+        if (!existingQuiz) {
+            const latestQuiz = await DailyQuiz.findOne().sort({date: 'desc'});
+            let startMissingDate = new Date();
+            startMissingDate.setHours(0, 0, 0, 0);
+            // If there are no quizzes in the database, set the start date to the current date
+            if (latestQuiz) {
+                startMissingDate = new Date(latestQuiz.date);
+                startMissingDate.setDate(startMissingDate.getDate() + 1); // Start from the next day
+            }
+            // Iterate over missing dates and create quizzes
+            while (startMissingDate <= currentDate) {
+                const existingQuizForMissingDate = await DailyQuiz.findOne({date: startMissingDate});
+
+                if (!existingQuizForMissingDate) {
+                    const allQuestions = await AllQuizSchema.find();
+                    const randomGenerateQuestions = getRandomGenerateQuestion(allQuestions, 4);
+
+                    const newDailyQuiz = new DailyQuiz({
+                        date: new Date(startMissingDate),
+                        quiz: randomGenerateQuestions
+                    });
+
+                    await newDailyQuiz.save();
+                    console.log('Quiz for the missing date created:', startMissingDate);
+                } else {
+                    console.log('Quiz already exists for the date:', startMissingDate);
+                }
+
+                startMissingDate.setDate(startMissingDate.getDate() + 1); // Move to the next day
+            }
+
             const Quizes = await DailyQuiz.find();
             res.status(200).send(Quizes);
-        }
-        else {
+        } else {
             const Quizes = await DailyQuiz.find();
             res.status(200).send(Quizes);
         }
@@ -135,6 +159,7 @@ const GetDailyQuiz = async (req, res) => {
         console.error('Error setting daily quiz:', error);
         res.status(500).json({message: 'Internal Server Error'});
     }
+
 
 };
 
@@ -272,4 +297,105 @@ const getTopicQuiz = async (req, res) => {
 
     }
 };
-module.exports = {AddContentQuiz, getCourseQuiz, getTopicQuiz, getSectionQuiz, saveResult, GetDailyQuiz, GetAllQuiz, AddSectionQuiz, AddCourseQuiz};
+
+const getCourseSingleQuiz = async (req, res) => {
+    try {
+        const name = req.params.name;
+        const QuizId = req.params.QuizId;
+        const existingCourse = await Course.findOne({name: name}).exec();
+        if (!existingCourse) {
+            res.status(400).send({success: false, error: "ExistingCourse is not found"});
+        }
+        const existingQuiz = await existingCourse.Quizes.id(QuizId);
+        if (!existingQuiz) {
+            return res.status(400).send({success: false, error: "Quiz is not found"});
+        }
+        return res.status(200).send({success: true, data: existingQuiz});
+    } catch (error) {
+        console.log(error);
+    }
+
+};
+
+const getSectionSingleQuiz = async (req, res) => {
+    try {
+        const name = req.params.name;
+        const QuizId = req.params.QuizId;
+        const sectionId = req.params.sectionId;
+        const existingCourse = await Course.findOne({name: name}).exec();
+        if (!existingCourse) {
+            res.status(400).send({success: false, error: "ExistingCourse is not found"});
+        }
+        const existingSection = await existingCourse.sections.id(sectionId);
+        if (!existingSection) {
+            return res.status(400).send({success: false, error: "section is not found"});
+        }
+
+        const existingQuiz = await existingSection.Quizes.id(QuizId);
+        if (!existingQuiz) {
+            return res.status(400).send({success: false, error: "Quiz is not found"});
+        }
+
+        return res.status(200).send({success: true, data: existingQuiz});
+    } catch (error) {
+        console.log(error);
+    }
+
+};
+
+const getTopicSingleQuiz = async (req, res) => {
+    try {
+        const name = req.params.name;
+        const QuizId = req.params.QuizId;
+        const sectionId = req.params.sectionId;
+        const topicId = req.params.topicId;
+        const existingCourse = await Course.findOne({name: name}).exec();
+        if (!existingCourse) {
+            res.status(400).send({success: false, error: "ExistingCourse is not found"});
+        }
+        const existingSection = await existingCourse.sections.id(sectionId);
+        if (!existingSection) {
+            return res.status(400).send({success: false, error: "section is not found"});
+        }
+
+        const existingTopic = await existingSection.Topic.id(topicId);
+        if (!existingTopic) {
+            return res.status(400).send({success: false, error: "section is not found"});
+        }
+        const existingQuiz = await existingTopic.Quizes.id(QuizId);
+        if (!existingQuiz) {
+            return res.status(400).send({success: false, error: "Quiz is not found"});
+        }
+
+        return res.status(200).send({success: true, data: existingQuiz});
+
+        console.log(name, sectionId, topicId, QuizId);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const AddRandomQuiz = async (req, res) => {
+    const {QuizName, Questions, timeDuration, QuizDate} = req.body;
+    const newRandomQuiz = new RandomQuiz({
+        QuizName: QuizName,
+        quiz: Questions,
+        duration: Number(timeDuration),
+        date: new Date(QuizDate)
+    });
+    
+    await newRandomQuiz.save();
+    res.status(200).send({success: true, message: "Quiz Saved"});
+    for (let a = 0; a < Questions.length; a++) {
+        const newQuiz = new AllQuizSchema(
+            Questions[a]
+        );
+        await newQuiz.save();
+    }
+};
+
+const getRandomQuiz = async (req, res) => {
+    const AllRandomQuiz = await RandomQuiz.find();
+    res.send(AllRandomQuiz);
+};
+module.exports = {getCourseSingleQuiz, getRandomQuiz, AddRandomQuiz, getSectionSingleQuiz, getTopicSingleQuiz, AddContentQuiz, getCourseQuiz, getTopicQuiz, getSectionQuiz, saveResult, GetDailyQuiz, GetAllQuiz, AddSectionQuiz, AddCourseQuiz};

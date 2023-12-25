@@ -5,6 +5,8 @@ import QuizCard from '../../Component/PracticeQuiz/QuizCard';
 import {Container, Grid, Button, Typography, TextField} from '@mui/material';
 import AddCourseQuizBtn from '../../Component/QuizAdmin/AddCourseQuizBtn';
 import {Link} from 'react-router-dom';
+import LoadingComponent from '../../Component/Loading';
+import NoDataFound from '../../Component/NoDataFound';
 const CourseQuiz = () => {
     const {name} = useParams();
     const [Quiz, setQuiz] = useState([]);
@@ -25,6 +27,14 @@ const CourseQuiz = () => {
         };
         fetchData();
     }, [1]);
+
+    if(loading){
+        return <LoadingComponent/>
+    }
+
+    if(Quiz.length===0){
+        return <NoDataFound/>
+    }
     console.log(Quiz);
     return (
         <>

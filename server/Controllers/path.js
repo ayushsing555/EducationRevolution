@@ -437,4 +437,6 @@ const getSingleUser = async (req, res) => {
 };
 
 
+
+
 module.exports = {getUsers, getSingleUser, ContentDelete, SectionDelete, CourseDelete, TopicDelete, ContentUpdate, CourseUpdate, SectionUpdate, TopicUpdate, AddTopic, AddContent, getCourse, getOneCourse, AddSection, AddCourse, SendOtp, registerUser, loginUser};

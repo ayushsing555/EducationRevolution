@@ -5,6 +5,8 @@ import QuizCard from '../../Component/PracticeQuiz/QuizCard';
 import {Container, Grid, Button, Typography, TextField} from '@mui/material';
 import {Link} from 'react-router-dom';
 import AddCourseQuizBtn from '../../Component/QuizAdmin/AddCourseQuizBtn';
+import LoadingComponent from '../../Component/Loading';
+import NoDataFound from '../../Component/NoDataFound';
 const SectionQuiz = () => {
     const {name, sectionId} = useParams();
     const [loading, setLoading] = useState(true);
@@ -25,6 +27,14 @@ const SectionQuiz = () => {
         };
         fetchData();
     }, [1]);
+
+    if(loading){
+        return <LoadingComponent/>
+    }
+
+    if(quiz.length===0){
+        return <NoDataFound/>
+    }
     console.log(quiz);
     return (
 
@@ -35,15 +45,13 @@ const SectionQuiz = () => {
                         <Typography variant="h4" component="h2" className="mb-4 text-gray-800 lg:text-5xl">
                             Quizes
                         </Typography>
-                        <div style={{display: 'flex', alignItems: 'center'}}>
-                            <AddCourseQuizBtn part="SectionPage" course={{label: name}} />
-                        </div>
+                        
                     </div>
                     <Typography variant="h6" component="p" className="text-gray-500 md:text-lg">
                         Select Any Section
                     </Typography>
-                    <Link to="/course" className="text-indigo-500 hover:underline">
-                        Back to Courses
+                    <Link to={`/course/${name}`} className="text-indigo-500 hover:underline">
+                        Back to Section
                     </Link>
                 </div>
                 <TextField

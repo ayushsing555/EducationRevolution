@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const {getUsers,registerUser,SendOtp,CourseUpdate,SectionDelete,CourseDelete,getSingleUser,TopicDelete,ContentUpdate,SectionUpdate,TopicUpdate,AddContent,getOneCourse,AddTopic,AddCourse,AddSection,loginUser,getCourse,ContentDelete} = require("../Controllers/path");
-const {AddContentQuiz,AddSectionQuiz,AddCourseQuiz,getTopicQuiz,getSectionQuiz,GetAllQuiz,GetDailyQuiz,saveResult,getCourseQuiz}  = require("../Controllers/quizPath");
+const {AddContentQuiz,AddSectionQuiz,getRandomQuiz,AddCourseQuiz,AddRandomQuiz,getCourseSingleQuiz,getSectionSingleQuiz,getTopicSingleQuiz,getTopicQuiz,getSectionQuiz,GetAllQuiz,GetDailyQuiz,saveResult,getCourseQuiz}  = require("../Controllers/quizPath");
 router.route("/users").get(getUsers);
 router.route("/users/:id").get(getSingleUser);
 router.route("/register/user").post(registerUser);
@@ -30,4 +30,9 @@ router.route("/saveResult/:id").post(saveResult);
 router.route("/courseQuiz/:name").get(getCourseQuiz);
 router.route("/courseQuiz/:name/:sectionId").get(getSectionQuiz);
 router.route("/courseQuiz/:name/:sectionId/:topicId").get(getTopicQuiz);
+router.route("/Quiz/:name/:QuizId/").get(getCourseSingleQuiz); //courseName ~~ name
+router.route("/Quiz/:name/:sectionId/:QuizId/").get(getSectionSingleQuiz);
+router.route("/Quiz/:name/:sectionId/:topicId/:QuizId/").get(getTopicSingleQuiz);
+router.route("/add/randomQuiz").post(AddRandomQuiz);
+router.route("/get/randomQuiz").get(getRandomQuiz);
 module.exports = router;

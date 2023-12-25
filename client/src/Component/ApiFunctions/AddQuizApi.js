@@ -127,3 +127,29 @@ export async function AddCoins(email) {
     return false;
 
 }
+
+export async function SendRandomQuiz(QuizName,timeDuration,selectedDate,questions){
+    console.log(QuizName,timeDuration,selectedDate,questions)
+    let headersList = {
+        "Accept": "*/*",
+        "Content-Type": "application/json"
+    };
+    const response = await fetch("http://localhost:8000/add/randomQuiz",{
+        method:'post',
+        body:JSON.stringify({
+            Questions:questions,
+            timeDuration:timeDuration,
+            QuizDate:selectedDate,
+            QuizName:QuizName
+        }),
+        headers:headersList
+    })
+    const data = await response.json();
+    if(data.success){
+        return true;
+    }
+    else{
+        alert(data.error);
+    }
+
+}

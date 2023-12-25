@@ -39,6 +39,8 @@ const Navbar = () => {
                                 <Link to="/course" className='text-white hover:underline mx-4'>Courses</Link>
                                 <Link to ='/admin' className='text-white hover:underline mx-4'>Admin</Link>
                                 <Link to='/DailyQuiz'className='text-white hover:underline mx-4'>Daily Quiz</Link>
+                                <Link to='/Quizes' className='text-white hover:underline mx-4'>Quizes</Link>
+                                <Link to='/createQuiz' className='text-white hover:underline mx-4'>Create Quiz</Link>
                             </>
                         }
                     </div>
