@@ -111,3 +111,20 @@ export async function getTopicSingleQuiz(name,sectionId,TopicId,QuizId){
     }
     return false;
 }
+
+export async function getScheduledQuiz(){
+    console.log("function invokeds")
+    let headersList = {
+        "Accept": "*/*",
+        "Content-Type": "application/json"
+    }
+    const response = await fetch(`http://localhost:8000/scheduledQuiz`,{
+        method:'get',
+        headers:headersList
+    })
+    const data = await response.json();
+    if(data.success){
+        return data.data;
+    }
+    return false;
+}

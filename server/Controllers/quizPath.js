@@ -395,7 +395,9 @@ const AddRandomQuiz = async (req, res) => {
 };
 
 const getRandomQuiz = async (req, res) => {
+    console.log("yuyuu")
     const AllRandomQuiz = await RandomQuiz.find();
-    res.send(AllRandomQuiz);
+    console.log(AllRandomQuiz)
+    res.status(200).send({success:true,data:AllRandomQuiz});
 };
 module.exports = {getCourseSingleQuiz, getRandomQuiz, AddRandomQuiz, getSectionSingleQuiz, getTopicSingleQuiz, AddContentQuiz, getCourseQuiz, getTopicQuiz, getSectionQuiz, saveResult, GetDailyQuiz, GetAllQuiz, AddSectionQuiz, AddCourseQuiz};

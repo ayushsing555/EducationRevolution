@@ -34,5 +34,5 @@ router.route("/Quiz/:name/:QuizId/").get(getCourseSingleQuiz); //courseName ~~ n
 router.route("/Quiz/:name/:sectionId/:QuizId/").get(getSectionSingleQuiz);
 router.route("/Quiz/:name/:sectionId/:topicId/:QuizId/").get(getTopicSingleQuiz);
 router.route("/add/randomQuiz").post(AddRandomQuiz);
-router.route("/get/randomQuiz").get(getRandomQuiz);
+router.route("/scheduledQuiz").get(getRandomQuiz);
 module.exports = router;

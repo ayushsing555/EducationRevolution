@@ -29,6 +29,7 @@ import CourseQuizQuestions from './Pages/PracticeQuizes/CourseQuizQuestions';
 import SectionQuizQuestions from './Pages/PracticeQuizes/SectionQuizQuestions';
 import TopicQuizQuestions from './Pages/PracticeQuizes/TopicQuizQuestions';
 import CreateQuiz from './Pages/Admin/Quiz/CreateQuiz';
+import ScheduledQuiz from './Pages/ScheduledQuiz';
 const App = () => {
   const [isLoggedIn, setLoggedIn] = useState(false);
   // Callback function to update the 'isLoggedIn' state
@@ -65,6 +66,7 @@ const App = () => {
           <Route path='/course/:name/:sectionId/quizes/:QuizId' element={<SectionQuizQuestions/>}/>
           <Route path='/course/:name/:sectionId/:topicId/quizes/:QuizId' element={<TopicQuizQuestions/>}/>
           <Route path='/createQuiz'  element={<CreateQuiz/>}/>
+          <Route path="/quizes" element={<ScheduledQuiz/>}/>
         </Routes>
         <Footer/>
       </BrowserRouter>

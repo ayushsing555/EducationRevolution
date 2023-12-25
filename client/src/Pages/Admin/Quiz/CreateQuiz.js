@@ -48,6 +48,8 @@ const CreateQuiz = () => {
         if (result) {
             setQuestions([]);
             setQuizName("");
+            setTimeDuration();
+            setSelectedDate("");
             toast.success('QuizAdded', {
                 position: 'bottom',
                 autoClose: 2000, // Time in milliseconds, set to 0 to disable auto-close
@@ -258,7 +260,7 @@ const CreateQuiz = () => {
                                 startIcon={<AddIcon />}
                                 style={{marginTop: '20px'}}
                             >
-                                Add Content
+                                Create Quiz
                             </Button>
                         </>
                     ) : (
