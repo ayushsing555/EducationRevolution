@@ -149,10 +149,10 @@ const GetDailyQuiz = async (req, res) => {
                 startMissingDate.setDate(startMissingDate.getDate() + 1); // Move to the next day
             }
 
-            const Quizes = await DailyQuiz.find();
+            const Quizes = await DailyQuiz.find().sort({date: -1});
             res.status(200).send(Quizes);
         } else {
-            const Quizes = await DailyQuiz.find();
+            const Quizes = await DailyQuiz.find().sort({date: -1});
             res.status(200).send(Quizes);
         }
     } catch (error) {
@@ -383,7 +383,7 @@ const AddRandomQuiz = async (req, res) => {
         duration: Number(timeDuration),
         date: new Date(QuizDate)
     });
-    
+
     await newRandomQuiz.save();
     res.status(200).send({success: true, message: "Quiz Saved"});
     for (let a = 0; a < Questions.length; a++) {
@@ -395,9 +395,9 @@ const AddRandomQuiz = async (req, res) => {
 };
 
 const getRandomQuiz = async (req, res) => {
-    console.log("yuyuu")
+    console.log("yuyuu");
     const AllRandomQuiz = await RandomQuiz.find();
-    console.log(AllRandomQuiz)
-    res.status(200).send({success:true,data:AllRandomQuiz});
+    console.log(AllRandomQuiz);
+    res.status(200).send({success: true, data: AllRandomQuiz});
 };
 module.exports = {getCourseSingleQuiz, getRandomQuiz, AddRandomQuiz, getSectionSingleQuiz, getTopicSingleQuiz, AddContentQuiz, getCourseQuiz, getTopicQuiz, getSectionQuiz, saveResult, GetDailyQuiz, GetAllQuiz, AddSectionQuiz, AddCourseQuiz};

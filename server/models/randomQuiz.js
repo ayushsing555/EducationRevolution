@@ -18,7 +18,7 @@ const UserAttemptSchema = mongoose.Schema({
                 type: Date,
                 default: Date.now
             },
-            wrongAnswers:[]
+            wrongAnswers: []
         }
     ]
 });
@@ -26,14 +26,20 @@ const randomSchema = mongoose.Schema({
     date: {
         type: Date,
     },
-    duration:{
-        type:Number,
+    duration: {
+        type: Number,
     },
-    QuizName:{
-        type:String
+    QuizName: {
+        type: String
+    },
+    Followup: {
+        type: Boolean
+    },
+    notified: {
+        type: Boolean
     },
     users: [UserAttemptSchema],
     quiz: [QuizStructure],
-})
-const RandomQuiz = mongoose.models.RandomQuiz || mongoose.model("RandomQuiz",randomSchema);
+});
+const RandomQuiz = mongoose.models.RandomQuiz || mongoose.model("RandomQuiz", randomSchema);
 module.exports = RandomQuiz;

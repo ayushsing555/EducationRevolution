@@ -11,7 +11,7 @@ const Course = () => {
         </Typography>
         <div style={{display: 'flex', justifyContent: 'space-around'}}>
           {/* <!-- Add additional dropdowns here if needed --> */}
-          <AddCourseBtn part="Course" />
+          <AddCourseBtn part="Course"  />
         </div>
       </div>
     </>

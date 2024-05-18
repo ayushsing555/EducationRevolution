@@ -19,8 +19,11 @@ export async function AddCourseApi(courseName) {
     if (data.success) {
         return true;
     }
+    else if (data.message === 'This is Already Existed') {
+        return alert(data.message);
+    }
     else {
-        return alert("Invalid credentials");
+        return alert("something went wrong");
     }
 };
 export async function AddSectionApi(courseName, sectionName) {
@@ -48,12 +51,12 @@ export async function AddSectionApi(courseName, sectionName) {
         console.log("Response Data:", data.success);
 
         if (data.success) {
-             alert(data.message);
-             return (true);
+            alert(data.message);
+            return (true);
         }
         else {
-             alert(data.error);
-             return false;
+            alert(data.error);
+            return false;
         }
     } catch (error) {
         // Handle errors here
@@ -102,7 +105,7 @@ export async function AddTopicApi(courseId, sectionId, topicName) {
     }
 }
 
-export async function AddContentApi(subtopics,section,topic,course){
+export async function AddContentApi(subtopics, section, topic, course) {
     let headersList = {
         "Accept": "*/*",
         "Content-Type": "application/json"
@@ -112,25 +115,25 @@ export async function AddContentApi(subtopics,section,topic,course){
         courseId: course.label,
         sectionId: section.value,
         topicName: topic.label,
-        topicId:topic.value,
-        content:subtopics,
+        topicId: topic.value,
+        content: subtopics,
     });
-    try{
-        let response = await fetch("http://localhost:8000/add/content",{
-            method:"post",
-            headers:headersList,
-            body:bodyContent
-        })
+    try {
+        let response = await fetch("http://localhost:8000/add/content", {
+            method: "post",
+            headers: headersList,
+            body: bodyContent
+        });
         const data = await response.json();
-        if(data.success){
+        if (data.success) {
             alert(data.message);
             return true;
         }
-        else{
-           alert(data.message);
-            return false;  
+        else {
+            alert(data.message);
+            return false;
         }
-    }catch(error){
+    } catch (error) {
         console.log(error);
         return false;
     }

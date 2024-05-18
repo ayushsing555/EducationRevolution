@@ -165,7 +165,7 @@ const Box = ({title, elem, courseName, sectionId, TopicId, refreshData}) => {
     const formattedDate = `${date.getDate()}/${date.getMonth() + 1}`;
     return (
         <Grid item key={elem._id} xs={12} sm={6} md={4} lg={3} xl={2}>
-            <Card elevation={3} className="h-full flex flex-col">
+            <Card elevation={3} className="h-full flex flex-col" style={{borderTop: '3px solid blue'}}>
                 {
                     isLoading ? <>
                         <CircularProgress style={{margin: "auto"}} />
@@ -194,9 +194,9 @@ const Box = ({title, elem, courseName, sectionId, TopicId, refreshData}) => {
                                             </Link>
                                         </Tooltip>
                                         <Tooltip titile='Copy Link'>
-                                        <IconButton color="error" onClick={() => LinkCopy(`http://localhost:3000/course/${elem.name}`)}>
-                                            <Share />
-                                        </IconButton>
+                                            <IconButton color="error" onClick={() => LinkCopy(`http://localhost:3000/course/${elem.name}`)}>
+                                                <Share />
+                                            </IconButton>
                                         </Tooltip>
                                     </>
                                     ) : title === 'section' ? (<>
@@ -211,9 +211,9 @@ const Box = ({title, elem, courseName, sectionId, TopicId, refreshData}) => {
                                             </Link>
                                         </Tooltip>
                                         <Tooltip title="Copy Link" arrow>
-                                        <IconButton color="error" onClick={() => LinkCopy(`http://localhost:3000/course/${elem.name}`)}>
-                                            <Share />
-                                        </IconButton>
+                                            <IconButton color="error" onClick={() => LinkCopy(`http://localhost:3000/course/${elem.name}`)}>
+                                                <Share />
+                                            </IconButton>
                                         </Tooltip>
                                     </>
                                     ) : (
@@ -229,9 +229,9 @@ const Box = ({title, elem, courseName, sectionId, TopicId, refreshData}) => {
                                                 </Link>
                                             </Tooltip>
                                             <Tooltip title="Copy Link" arrow>
-                                            <IconButton color="error" onClick={() => LinkCopy(`http://localhost:3000/course/${courseName}/${sectionId}/${elem._id}`)}>
-                                                <Share />
-                                            </IconButton>
+                                                <IconButton color="error" onClick={() => LinkCopy(`http://localhost:3000/course/${courseName}/${sectionId}/${elem._id}`)}>
+                                                    <Share />
+                                                </IconButton>
                                             </Tooltip>
                                             <IconButton color="primary" onClick={() => downloadBulkDataWithStyle(elem)}>
                                                 <CloudDownloadIcon />
@@ -242,7 +242,7 @@ const Box = ({title, elem, courseName, sectionId, TopicId, refreshData}) => {
                                 )}
                             </Typography>
 
-                            <div className="mt-auto flex items-end justify-between">
+                            <div className="mt-auto flex items-end justify-between border ">
                                 <div className="flex items-center gap-2">
                                     <div>
                                         <span className="block text-indigo-500">CreatedAt:</span>
@@ -251,7 +251,15 @@ const Box = ({title, elem, courseName, sectionId, TopicId, refreshData}) => {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <div>
-                                        <span className="block text-indigo-500">Sections</span>
+                                        <span className="block text-indigo-500">
+                                            {
+                                                title === 'course'
+                                                    ? 'Sections'
+                                                    : title === 'section'
+                                                        ? 'Topics'
+                                                        : 'Subtopics'
+                                            }
+                                        </span>
                                         {
                                             title === 'course'
                                                 ? elem.totalSections
@@ -269,29 +277,29 @@ const Box = ({title, elem, courseName, sectionId, TopicId, refreshData}) => {
                                             { /* If editing is not in progress, show the Edit button */}
                                             {!isEditing && (
                                                 <>
-                                                   <Tooltip title='Update'>
-                                                    <IconButton color="primary" onClick={() => handleUpdate(elem.name)}>
-                                                        <Edit />
-                                                    </IconButton>
-                                                   </Tooltip>
+                                                    <Tooltip title='Update'>
+                                                        <IconButton color="primary" onClick={() => handleUpdate(elem.name)}>
+                                                            <Edit />
+                                                        </IconButton>
+                                                    </Tooltip>
                                                     <Tooltip title='Delete'>
                                                         <IconButton color="error" onClick={() => handleDelete(elem.name)}>
-                                                        <Delete />
-                                                    </IconButton>
+                                                            <Delete />
+                                                        </IconButton>
                                                     </Tooltip>
-                                                    
+
 
                                                 </>
                                             )}
                                             { /* If editing is in progress, show the Done button */}
                                             {isEditing && (
                                                 <>
-                                                   <Tooltip title='Done'>
-                                                    <IconButton color="success" onClick={() => handleDone(elem.name)}>
-                                                        <DoneIcon />
-                                                    </IconButton>
-                                                   </Tooltip>
-                                                    
+                                                    <Tooltip title='Done'>
+                                                        <IconButton color="success" onClick={() => handleDone(elem.name)}>
+                                                            <DoneIcon />
+                                                        </IconButton>
+                                                    </Tooltip>
+
                                                 </>
                                             )}
                                         </>
@@ -351,7 +359,7 @@ const Box = ({title, elem, courseName, sectionId, TopicId, refreshData}) => {
                 }
             </Card>
             <ToastContainer />
-        </Grid>
+        </Grid >
 
     );
 };

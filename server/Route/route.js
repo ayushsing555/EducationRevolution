@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const {getUsers,registerUser,SendOtp,CourseUpdate,SectionDelete,CourseDelete,getSingleUser,TopicDelete,ContentUpdate,SectionUpdate,TopicUpdate,AddContent,getOneCourse,AddTopic,AddCourse,AddSection,loginUser,getCourse,ContentDelete} = require("../Controllers/path");
-const {AddContentQuiz,AddSectionQuiz,getRandomQuiz,AddCourseQuiz,AddRandomQuiz,getCourseSingleQuiz,getSectionSingleQuiz,getTopicSingleQuiz,getTopicQuiz,getSectionQuiz,GetAllQuiz,GetDailyQuiz,saveResult,getCourseQuiz}  = require("../Controllers/quizPath");
+const {getUsers, registerUser, SendOtp, CourseUpdate, SectionDelete, CourseDelete, getSingleUser, TopicDelete, ContentUpdate, SectionUpdate, TopicUpdate, AddContent, getOneCourse, AddTopic, AddCourse, AddSection, loginUser, getCourse, ContentDelete} = require("../Controllers/path");
+const {AddContentQuiz, AddSectionQuiz, getRandomQuiz, AddCourseQuiz, AddRandomQuiz, getCourseSingleQuiz, getSectionSingleQuiz, getTopicSingleQuiz, getTopicQuiz, getSectionQuiz, GetAllQuiz, GetDailyQuiz, saveResult, getCourseQuiz} = require("../Controllers/quizPath");
+const {sendSubjectEmail, sendEmailForQuiz} = require('../Controllers/sendSubjectEmail');
 router.route("/users").get(getUsers);
 router.route("/users/:id").get(getSingleUser);
 router.route("/register/user").post(registerUser);
@@ -35,4 +36,6 @@ router.route("/Quiz/:name/:sectionId/:QuizId/").get(getSectionSingleQuiz);
 router.route("/Quiz/:name/:sectionId/:topicId/:QuizId/").get(getTopicSingleQuiz);
 router.route("/add/randomQuiz").post(AddRandomQuiz);
 router.route("/scheduledQuiz").get(getRandomQuiz);
+router.route("/SendSujectEmail").post(sendSubjectEmail);
+router.route("/sendEmailForQuiz").post(sendEmailForQuiz);
 module.exports = router;

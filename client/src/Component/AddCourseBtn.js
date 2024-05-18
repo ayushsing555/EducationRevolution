@@ -4,27 +4,22 @@ import Modal from 'react-modal';
 import {AddCourseApi} from './ApiFunctions/AddCourseApi';
 import {Button, Typography, TextField, Card, CardContent} from '@mui/material';
 import {modalStyles} from './Styles/modelStylles';
-const AddCourseBtn = ({part,refreshData}) => {
+const AddCourseBtn = ({part}) => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [courseName, setCourseName] = useState('');
 
     const handleSubmit = async (e) => {
-            let result = await AddCourseApi(courseName);
-            if (result) {
-                setModalOpen(false);
-                refreshData();
-            } else {
-                alert('Something went wrong');
-            }
+        let result = await AddCourseApi(courseName);
+        if (result) {
+            setModalOpen(false);
+        }
     };
 
     const openModal = () => {
         setModalOpen(true);
     };
     const closeModal = () => {
-
         setModalOpen(false);
-
     };
 
     return (

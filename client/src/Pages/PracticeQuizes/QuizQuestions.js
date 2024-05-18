@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Typography,
   Paper,
   Radio,
   FormControlLabel,
   Button,
-  Link,
+  CircularProgress,
 } from '@material-ui/core';
 
-const QuizQuestions = ({ getQuizDataFunction, params, pageName }) => {
+const QuizQuestions = ({getQuizDataFunction, params, pageName}) => {
   const [quizIndex, setQuizIndex] = useState(0);
-  const [QuizQuestions, setQuizQuestions] = useState([]);
+  const [quizQuestions, setQuizQuestions] = useState([]);
   const [userAnswers, setUserAnswers] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -43,22 +43,28 @@ const QuizQuestions = ({ getQuizDataFunction, params, pageName }) => {
     setQuizIndex((prevIndex) => prevIndex + 1);
   };
 
-  
-
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
+        <CircularProgress />
+      </div>
+    );
   }
 
-  if (QuizQuestions.length === 0) {
-    return <div>No data found</div>;
+  if (quizQuestions.length === 0) {
+    return (
+      <Paper style={{padding: 20, margin: 20}}>
+        <Typography variant="h5">No questions found</Typography>
+      </Paper>
+    );
   }
 
-  const currentQuestion = QuizQuestions[quizIndex];
+  const currentQuestion = quizQuestions[quizIndex];
 
   return (
-    <Paper style={{ padding: 20, margin: 20 }}>
-     <Typography variant="h5" gutterBottom>
-      <strong style={{color:"red"}}>Ques {(quizIndex+1)}/{QuizQuestions.length}:</strong> {currentQuestion.questionName}
+    <Paper style={{padding: 20, margin: 20}}>
+      <Typography variant="h5" gutterBottom>
+        <strong style={{color: 'red'}}>Question {quizIndex + 1}/{quizQuestions.length}:</strong> {currentQuestion.questionName}
       </Typography>
       <ul>
         {currentQuestion.options.map((option, index) => (
@@ -84,12 +90,15 @@ const QuizQuestions = ({ getQuizDataFunction, params, pageName }) => {
           <Typography variant="body1">
             Correct answer: <strong>{currentQuestion.answer}</strong>
           </Typography>
-          {quizIndex < QuizQuestions.length - 1 ? (
+          {quizIndex < quizQuestions.length - 1 ? (
             <Button variant="contained" color="primary" onClick={handleNextQuestion}>
               Next Question
             </Button>
-          ) : ""
-          }
+          ) : (
+            <Typography variant="h6" style={{marginTop: 20}}>
+              End of Quiz
+            </Typography>
+          )}
         </>
       )}
     </Paper>

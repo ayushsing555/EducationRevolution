@@ -14,7 +14,7 @@ const SendOtp = async (req, res) => {
     console.log(email);
     const otp = getOtp();
     const EmailContent = OtpEmail(otp);
-    sendEmail(email, EmailContent);
+    sendEmail(email, EmailContent, 'Account-verification');
     res.status(200).send({result: true, otp: otp});
 };
 
@@ -59,12 +59,22 @@ const AddCourse = async (req, res) => {
         const {name} = req.body;
         const id = ShortPassword();
 
+        const isExistCourse = await Course.find({name});
+
+        if (isExistCourse.length != 0) {
+
+            return res.status(300).send({success: false, message: "This is Already Existed"});
+        }
+
         // Create a new course with an empty array of sections
         const newCourse = new Course({name, id});
 
         // Save the course
         console.log(newCourse);
         const generatedCourse = await newCourse.save();
+
+
+
         console.log(generatedCourse);
 
         if (generatedCourse) {
@@ -92,7 +102,7 @@ const AddSection = async (req, res) => {
 
         await existingCourse.save();
 
-        return res.status(200).send({success: true, message: "Topic added to the section successfully."});
+        return res.status(200).send({success: true, message: "Section added to the Course successfully."});
     }
     catch (err) {
         console.error("Error:", err);
@@ -432,11 +442,11 @@ const CourseDelete = async (req, res) => {
 
 const getSingleUser = async (req, res) => {
     const email = req.params.id;
-    const existingUser = await User.findOne({email});
-    res.send(existingUser);
+    const existingUser = await User.findOne({_id: email});
+
+    console.log(existingUser);
+    return res.status(200).send(existingUser);
 };
-
-
 
 
 module.exports = {getUsers, getSingleUser, ContentDelete, SectionDelete, CourseDelete, TopicDelete, ContentUpdate, CourseUpdate, SectionUpdate, TopicUpdate, AddTopic, AddContent, getCourse, getOneCourse, AddSection, AddCourse, SendOtp, registerUser, loginUser};

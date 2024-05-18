@@ -40,6 +40,7 @@ const DailyQuiz = () => {
         });
         const data = await response.json();
         setQuizData(data.reverse());
+        console.log(quizData);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching daily quiz:', error);
@@ -49,8 +50,8 @@ const DailyQuiz = () => {
     fetchQuiz();
   }, []);
 
-  if(loading){
-    return <LoadingComponent/>
+  if (loading) {
+    return <LoadingComponent />;
   }
 
   return (
