@@ -4,7 +4,7 @@ export async function getQuizForDate(date) {
         "Accept": "*/*",
         "Content-Type": "application/json"
     };
-    const response = await fetch('http://localhost:8000/dailyQuiz', {
+    const response = await fetch('https://educationrevolution-1.onrender.com/dailyQuiz', {
         method: 'get',
         headers: headersList
     });
@@ -21,7 +21,7 @@ export async function getCourseQuiz(name) {
         "Accept": "*/*",
         "Content-Type": "application/json"
     };
-    const response = await fetch(`http://localhost:8000/courseQuiz/${name}`, {
+    const response = await fetch(`https://educationrevolution-1.onrender.com/courseQuiz/${name}`, {
         method: 'get',
         headers: headersList
     });
@@ -37,7 +37,7 @@ export async function getSectionQuiz(name, sectionId) {
         "Accept": "*/*",
         "Content-Type": "application/json"
     };
-    const response = await fetch(`http://localhost:8000/courseQuiz/${name}/${sectionId}`, {
+    const response = await fetch(`https://educationrevolution-1.onrender.com/courseQuiz/${name}/${sectionId}`, {
         method: 'get',
         headers: headersList
     });
@@ -53,7 +53,7 @@ export async function getTopicQuiz(name, sectionId, topicId) {
         "Accept": "*/*",
         "Content-Type": "application/json"
     };
-    const response = await fetch(`http://localhost:8000/courseQuiz/${name}/${sectionId}/${topicId}`, {
+    const response = await fetch(`https://educationrevolution-1.onrender.com/courseQuiz/${name}/${sectionId}/${topicId}`, {
         method: 'get',
         headers: headersList
     });
@@ -70,7 +70,7 @@ export async function getCourseSingleQuiz(name, QuizId) {
         "Accept": "*/*",
         "Content-Type": "application/json"
     };
-    const response = await fetch(`http://localhost:8000/Quiz/${name}/${QuizId}`, {
+    const response = await fetch(`https://educationrevolution-1.onrender.com/Quiz/${name}/${QuizId}`, {
         method: 'get',
         headers: headersList
     });
@@ -86,7 +86,7 @@ export async function getSectionSingleQuiz(name, sectionId, QuizId) {
         "Accept": "*/*",
         "Content-Type": "application/json"
     };
-    const response = await fetch(`http://localhost:8000/Quiz/${name}/${sectionId}/${QuizId}`, {
+    const response = await fetch(`https://educationrevolution-1.onrender.com/Quiz/${name}/${sectionId}/${QuizId}`, {
         method: 'get',
         headers: headersList
     });
@@ -101,7 +101,7 @@ export async function getTopicSingleQuiz(name, sectionId, TopicId, QuizId) {
         "Accept": "*/*",
         "Content-Type": "application/json"
     };
-    const response = await fetch(`http://localhost:8000/Quiz/${name}/${sectionId}/${TopicId}/${QuizId}`, {
+    const response = await fetch(`https://educationrevolution-1.onrender.com/Quiz/${name}/${sectionId}/${TopicId}/${QuizId}`, {
         method: 'get',
         headers: headersList
     });
@@ -118,7 +118,7 @@ export async function getScheduledQuiz() {
         "Accept": "*/*",
         "Content-Type": "application/json"
     };
-    const response = await fetch(`http://localhost:8000/scheduledQuiz`, {
+    const response = await fetch(`https://educationrevolution-1.onrender.com/scheduledQuiz`, {
         method: 'get',
         headers: headersList
     });
@@ -136,7 +136,7 @@ export async function getScheduledQuizDataById(id) {
         "Accept": "*/*",
         "Content-Type": "application/json"
     };
-    const response = await fetch(`http://localhost:8000/scheduledQuiz`, {
+    const response = await fetch(`https://educationrevolution-1.onrender.com/scheduledQuiz`, {
         method: 'get',
         headers: headersList
     });

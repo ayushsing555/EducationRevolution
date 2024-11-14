@@ -3,7 +3,7 @@ export async function getAllCourses() {
         "Accept": "*/*",
         "Content-Type": "application/json"
     };
-    const response = await fetch("http://localhost:8000/course", {
+    const response = await fetch("https://educationrevolution-1.onrender.com/course", {
         method: "get",
         headers: headersList
     });
@@ -16,7 +16,7 @@ export async function getIndividualCourse(courseName) {
         "Accept": "*/*",
         "Content-Type": "application/json"
     };
-    const response = await fetch(`http://localhost:8000/course/${courseName}`, {
+    const response = await fetch(`https://educationrevolution-1.onrender.com/course/${courseName}`, {
         method: "get",
         headers: headersList
     });
@@ -29,7 +29,7 @@ export async function getTopicsAndSectionName(courseName, sectionId) {
     result.push({course: {label: courseName}});
     const data = await getAllCourses();
     let course = data.filter((c) => c.name === courseName);
-    console.log(course)
+    console.log(course);
     if (course) {
         const Onesection = course[0].sections.filter((s) => s._id === sectionId);
         if (Onesection) {
@@ -37,15 +37,15 @@ export async function getTopicsAndSectionName(courseName, sectionId) {
                 section: {
                     label: Onesection[0].name,
                     value: Onesection[0]._id,
-                    topics:Onesection[0].Topic
+                    topics: Onesection[0].Topic
                 }
             });
-            return  result;
-                
+            return result;
+
         }
     }
     return result;
-       
+
 }
 
 export async function getContent(courseName, SectionId, TopicId) {
@@ -84,7 +84,7 @@ export async function getAllUsers() {
         "Accept": "*/*",
         "Content-Type": "application/json"
     };
-    const response = await fetch("http://localhost:8000/users", {
+    const response = await fetch("https://educationrevolution-1.onrender.com/users", {
         method: "get",
         headers: headersList
     });
@@ -92,12 +92,12 @@ export async function getAllUsers() {
     return data;
 }
 
-export async function getSingleUserDetail(email){
+export async function getSingleUserDetail(email) {
     let headersList = {
         "Accept": "*/*",
         "Content-Type": "application/json"
     };
-    const response = await fetch(`http://localhost:8000/users/${email}`, {
+    const response = await fetch(`https://educationrevolution-1.onrender.com/users/${email}`, {
         method: "get",
         headers: headersList
     });

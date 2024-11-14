@@ -4,7 +4,7 @@ export async function userDetailById(id) {
         "Accept": "*/*",
         "Content-Type": "application/json"
     };
-    const response = await fetch(`http://localhost:8000/users/${id}`, {
+    const response = await fetch(`https://educationrevolution-1.onrender.com/users/${id}`, {
         method: 'get',
         headers: headersList
     });

@@ -26,7 +26,7 @@ const Box = ({title, elem, courseName, sectionId, TopicId, refreshData}) => {
             let bodyContent = JSON.stringify({
                 name: name
             });
-            const result = await fetch('http://localhost:8000/course/delete', {
+            const result = await fetch('https://educationrevolution-1.onrender.com/course/delete', {
                 method: 'delete',
                 body: bodyContent,
                 headers: headersList
@@ -46,7 +46,7 @@ const Box = ({title, elem, courseName, sectionId, TopicId, refreshData}) => {
                 name: name,
                 sectionId: sectionId,
             });
-            const result = await fetch('http://localhost:8000/course/section/delete', {
+            const result = await fetch('https://educationrevolution-1.onrender.com/course/section/delete', {
                 method: 'delete',
                 body: bodyContent,
                 headers: headersList
@@ -65,7 +65,7 @@ const Box = ({title, elem, courseName, sectionId, TopicId, refreshData}) => {
                 sectionId: sectionId,
                 topicId: TopicId
             });
-            const result = await fetch('http://localhost:8000/course/section/topic/delete', {
+            const result = await fetch('https://educationrevolution-1.onrender.com/course/section/topic/delete', {
                 method: 'delete',
                 body: bodyContent,
                 headers: headersList
@@ -94,7 +94,7 @@ const Box = ({title, elem, courseName, sectionId, TopicId, refreshData}) => {
                 updatedValue: updateVale,
                 courseName: name
             });
-            const result = await fetch('http://localhost:8000/course/update', {
+            const result = await fetch('https://educationrevolution-1.onrender.com/course/update', {
                 method: 'Put',
                 body: bodyContent,
                 headers: headersList
@@ -113,7 +113,7 @@ const Box = ({title, elem, courseName, sectionId, TopicId, refreshData}) => {
                 courseName: name,
                 sectionId: sectionId
             });
-            const result = await fetch('http://localhost:8000/course/section/update', {
+            const result = await fetch('https://educationrevolution-1.onrender.com/course/section/update', {
                 method: 'Put',
                 body: bodyContent,
                 headers: headersList
@@ -133,7 +133,7 @@ const Box = ({title, elem, courseName, sectionId, TopicId, refreshData}) => {
                 sectionId: sectionId,
                 topicId: TopicId
             });
-            const result = await fetch('http://localhost:8000/course/section/topic/update', {
+            const result = await fetch('https://educationrevolution-1.onrender.com/course/section/topic/update', {
                 method: 'Put',
                 body: bodyContent,
                 headers: headersList

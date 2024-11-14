@@ -34,7 +34,7 @@ const DailyQuiz = () => {
           Accept: '*/*',
           'Content-Type': 'application/json',
         };
-        const response = await fetch('http://localhost:8000/dailyQuiz', {
+        const response = await fetch('https://educationrevolution-1.onrender.com/dailyQuiz', {
           method: 'get',
           headers: headersList,
         });

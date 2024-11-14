@@ -14,7 +14,7 @@ export async function AddQuizContent(Quiz, Name, sectionId, topicId, QuizName) {
         topicId: topicId,
         QuizName: QuizName
     });
-    const response = await fetch("http://localhost:8000/add/content/Quiz", {
+    const response = await fetch("https://educationrevolution-1.onrender.com/add/content/Quiz", {
         method: "post",
         body: bodyContent,
         headers: headersList
@@ -41,7 +41,7 @@ export async function AddQuizSection(Quiz, Name, sectionId, QuizName) {
         QuizName: QuizName
     });
 
-    const response = await fetch("http://localhost:8000/add/section/Quiz", {
+    const response = await fetch("https://educationrevolution-1.onrender.com/add/section/Quiz", {
         method: "post",
         body: bodyContent,
         headers: headersList
@@ -66,7 +66,7 @@ export async function AddQuizCourse(Quiz, Name, QuizName) {
         QuizName: QuizName
     });
 
-    const response = await fetch("http://localhost:8000/add/course/Quiz", {
+    const response = await fetch("https://educationrevolution-1.onrender.com/add/course/Quiz", {
         method: "post",
         body: bodyContent,
         headers: headersList
@@ -79,7 +79,7 @@ export async function AddQuizCourse(Quiz, Name, QuizName) {
     }
 }
 
-export async function sendResult(elem, score, wrongAnswer,isCurrentDay) {
+export async function sendResult(elem, score, wrongAnswer, isCurrentDay) {
     try {
         const userDetail = getUserDetail();
         let headersList = {
@@ -90,10 +90,10 @@ export async function sendResult(elem, score, wrongAnswer,isCurrentDay) {
             score: score,
             email: userDetail.email,
             wrongAnswer: wrongAnswer,
-            isCurrentDay:isCurrentDay
+            isCurrentDay: isCurrentDay
         });
 
-        const response = await fetch(`http://localhost:8000/saveResult/${elem._id}`, {
+        const response = await fetch(`https://educationrevolution-1.onrender.com/saveResult/${elem._id}`, {
             method: "post",
             headers: headersList,
             body: bodyContent
@@ -116,7 +116,7 @@ export async function AddCoins(email) {
         "Accept": "*/*",
         "Content-Type": "application/json"
     };
-    const response = await fetch(`http://localhost:8000/${email}/addCoin}`, {
+    const response = await fetch(`https://educationrevolution-1.onrender.com/${email}/addCoin}`, {
         method: "post",
         headers: headersList,
     });
@@ -128,27 +128,27 @@ export async function AddCoins(email) {
 
 }
 
-export async function SendRandomQuiz(QuizName,timeDuration,selectedDate,questions){
-    console.log(QuizName,timeDuration,selectedDate,questions)
+export async function SendRandomQuiz(QuizName, timeDuration, selectedDate, questions) {
+    console.log(QuizName, timeDuration, selectedDate, questions);
     let headersList = {
         "Accept": "*/*",
         "Content-Type": "application/json"
     };
-    const response = await fetch("http://localhost:8000/add/randomQuiz",{
-        method:'post',
-        body:JSON.stringify({
-            Questions:questions,
-            timeDuration:timeDuration,
-            QuizDate:selectedDate,
-            QuizName:QuizName
+    const response = await fetch("https://educationrevolution-1.onrender.com/add/randomQuiz", {
+        method: 'post',
+        body: JSON.stringify({
+            Questions: questions,
+            timeDuration: timeDuration,
+            QuizDate: selectedDate,
+            QuizName: QuizName
         }),
-        headers:headersList
-    })
+        headers: headersList
+    });
     const data = await response.json();
-    if(data.success){
+    if (data.success) {
         return true;
     }
-    else{
+    else {
         alert(data.error);
     }
 

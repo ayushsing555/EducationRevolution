@@ -78,7 +78,7 @@ Sincerely,
       'AllStudents': sendToAllStudent
     });
 
-    let response = await fetch("http://localhost:8000/SendSujectEmail", {
+    let response = await fetch("https://educationrevolution-1.onrender.com/SendSujectEmail", {
       method: "POST",
       body: bodyContent,
       headers: headersList

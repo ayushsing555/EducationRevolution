@@ -10,7 +10,7 @@ export async function AddCourseApi(courseName) {
     let bodyContent = JSON.stringify({
         name: courseName
     });
-    const response = await fetch("http://localhost:8000/add/course", {
+    const response = await fetch("https://educationrevolution-1.onrender.com/add/course", {
         method: "POST",
         body: bodyContent,
         headers: headersList
@@ -38,7 +38,7 @@ export async function AddSectionApi(courseName, sectionName) {
     });
 
     try {
-        const response = await fetch("http://localhost:8000/add/section", {
+        const response = await fetch("https://educationrevolution-1.onrender.com/add/section", {
             method: "POST",
             body: bodyContent,
             headers: headersList
@@ -79,7 +79,7 @@ export async function AddTopicApi(courseId, sectionId, topicName) {
         topicName: topicName
     });
     try {
-        const response = await fetch("http://localhost:8000/add/section/topic", {
+        const response = await fetch("https://educationrevolution-1.onrender.com/add/section/topic", {
             method: "POST",
             body: bodyContent,
             headers: headersList
@@ -119,7 +119,7 @@ export async function AddContentApi(subtopics, section, topic, course) {
         content: subtopics,
     });
     try {
-        let response = await fetch("http://localhost:8000/add/content", {
+        let response = await fetch("https://educationrevolution-1.onrender.com/add/content", {
             method: "post",
             headers: headersList,
             body: bodyContent

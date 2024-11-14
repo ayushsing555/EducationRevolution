@@ -9,7 +9,7 @@ export async function sendNotificationForQuiz(id) {
         let bodyContent = JSON.stringify({
             QuizId: id
         });
-        const response = await fetch(`http://localhost:8000/sendEmailForQuiz`, {
+        const response = await fetch(`https://educationrevolution-1.onrender.com/sendEmailForQuiz`, {
             method: 'post',
             headers: headersList,
             body: bodyContent

@@ -42,7 +42,7 @@ const ContentBox = ({elem, index, name, sectionId, topicId, RefreshData}) => {
             content: contentDetail
         });
 
-        let response = await fetch("http://localhost:8000/content/delete", {
+        let response = await fetch("https://educationrevolution-1.onrender.com/content/delete", {
             method: 'delete',
             body: bodyContent,
             headers: headersList
@@ -70,7 +70,7 @@ const ContentBox = ({elem, index, name, sectionId, topicId, RefreshData}) => {
             contentName: contentName,
             content: contentDetail
         });
-        let response = await fetch("http://localhost:8000/content/update", {
+        let response = await fetch("https://educationrevolution-1.onrender.com/content/update", {
             method: 'put',
             body: bodyContent,
             headers: headersList

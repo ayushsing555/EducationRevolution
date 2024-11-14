@@ -16,9 +16,9 @@ const Navbar = () => {
         // Clear user data from localStorage
         localStorage.removeItem('name');
         localStorage.removeItem('token');
-
         // Update the 'loggedIn' state to false
         setLoggedIn(false);
+        navigate('/signin');
         // Redirect to the home page or any other desired page after logout
     };
 
