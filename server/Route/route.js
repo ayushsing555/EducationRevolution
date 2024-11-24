@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {getUsers, registerUser, SendOtp, CourseUpdate, SectionDelete, CourseDelete, getSingleUser, TopicDelete, ContentUpdate, SectionUpdate, TopicUpdate, AddContent, getOneCourse, AddTopic, AddCourse, AddSection, loginUser, getCourse, ContentDelete} = require("../Controllers/path");
+const {getUsers, registerUser, SendOtp, CourseUpdate, getSalesforceUser,SectionDelete, CourseDelete, getSingleUser, TopicDelete, ContentUpdate, SectionUpdate, TopicUpdate, AddContent, getOneCourse, AddTopic, AddCourse, AddSection, loginUser, getCourse, ContentDelete} = require("../Controllers/path");
 const {AddContentQuiz, AddSectionQuiz, getRandomQuiz, AddCourseQuiz, AddRandomQuiz, getCourseSingleQuiz, getSectionSingleQuiz, getTopicSingleQuiz, getTopicQuiz, getSectionQuiz, GetAllQuiz, GetDailyQuiz, saveResult, getCourseQuiz} = require("../Controllers/quizPath");
 const {sendSubjectEmail, sendEmailForQuiz} = require('../Controllers/sendSubjectEmail');
 router.route("/users").get(getUsers);
@@ -8,6 +8,7 @@ router.route("/users/:id").get(getSingleUser);
 router.route("/register/user").post(registerUser);
 router.route("/login/user").post(loginUser);
 router.route("/SendOtp").post(SendOtp);
+router.route('/salesforceuser').get(getSalesforceUser);
 router.route("/course").get(getCourse);
 router.route("/add/course").post(AddCourse);
 router.route("/add/section").post(AddSection);
