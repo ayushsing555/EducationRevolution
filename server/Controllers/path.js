@@ -9,6 +9,11 @@ const getUsers = async (req, res) => {
     res.status(200).send(users);
 };
 
+const getSalesforceUser = async(req,res)=>{
+    const users = await User.find();
+    res.status(200).send({status:200,data:users});
+}
+
 const SendOtp = async (req, res) => {
     const {email} = req.body;
     console.log(email);
