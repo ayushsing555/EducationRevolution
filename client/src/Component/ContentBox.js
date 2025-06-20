@@ -1,211 +1,223 @@
-import React, {useState} from 'react';
-import {Typography, Paper, Button, IconButton} from '@mui/material';
+import React, { useState } from 'react';
+import {
+    Typography,
+    Paper,
+    Button,
+    IconButton,
+    TextField,
+    CircularProgress,
+    Tooltip
+} from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
-import {Edit, Delete} from '@mui/icons-material';
-import {TextField} from '@mui/material';
+import { Edit, Delete } from '@mui/icons-material';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import downloadImage from '../Component/Functionality/downloadFiles/downloadImage';
 import downloadTextWithStyle from '../Component/Functionality/downloadFiles/downloadFile';
-import CircularProgress from '@mui/material/CircularProgress';
-const ContentBox = ({elem, index, name, sectionId, topicId, RefreshData}) => {
+
+const ContentBox = ({ elem, index, name, sectionId, topicId, RefreshData }) => {
     const date = new Date(elem.createdDate);
     const [isAdmin, SetIsAdmin] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
-    const [contentName, setContentName] = useState("");
-    const [contentDetail, setContentDetail] = useState("");
+    const [contentName, setContentName] = useState(elem.name || "");
+    const [contentDetail, setContentDetail] = useState(elem.content || "");
     const formattedDate = `${date.getDate()}/${date.getMonth() + 1}`;
     const formattedTime = `${date.getHours()}:${(date.getMinutes() < 10 ? '0' : '')}${date.getMinutes()}`;
-    const content = elem.content.replace(/\n/g, '<br>');
+    const formattedContent = elem.content.replace(/\n/g, '<br>');
     const [showFullContent, setShowFullContent] = useState(false);
     const [loading, setLoading] = useState(false);
-    const toggleContent = () => {
-        setShowFullContent(!showFullContent);
-    };
 
-    const handleUpdate = async () => {
+    const toggleContent = () => setShowFullContent(!showFullContent);
 
-        setIsEditing(true);
-    };
+    const handleUpdate = () => setIsEditing(true);
+
     const handleDelete = async (contentId) => {
         setLoading(true);
-        let headersList = {
+        const headersList = {
             "Accept": "*/*",
             "Content-Type": "application/json"
         };
-
-        let bodyContent = JSON.stringify({
-            name: name,
-            sectionId: sectionId,
-            topicId: topicId,
-            contentId: contentId,
-            contentName: contentName,
-            content: contentDetail
+        const bodyContent = JSON.stringify({
+            name, sectionId, topicId, contentId
         });
 
-        let response = await fetch("https://educationrevolution-1.onrender.com/content/delete", {
+        const response = await fetch("https://educationrevolution-1.onrender.com/content/delete", {
             method: 'delete',
             body: bodyContent,
             headers: headersList
         });
+
         const data = await response.json();
         if (data.success) {
             RefreshData();
-            setLoading(true);
-        }
-        else {
+        } else {
             alert(data.error);
         }
+        setLoading(false);
     };
+
     const handleDone = async (contentId) => {
         setLoading(true);
-        let headersList = {
+        const headersList = {
             "Accept": "*/*",
             "Content-Type": "application/json"
         };
-        let bodyContent = JSON.stringify({
-            name: name,
-            sectionId: sectionId,
-            topicId: topicId,
-            contentId: contentId,
-            contentName: contentName,
+        const bodyContent = JSON.stringify({
+            name,
+            sectionId,
+            topicId,
+            contentId,
+            contentName,
             content: contentDetail
         });
-        let response = await fetch("https://educationrevolution-1.onrender.com/content/update", {
+
+        const response = await fetch("https://educationrevolution-1.onrender.com/content/update", {
             method: 'put',
             body: bodyContent,
             headers: headersList
         });
+
         const data = await response.json();
         if (data.success) {
             setIsEditing(false);
             RefreshData();
-            setLoading(false);
-        }
-        else {
+        } else {
             alert(data.error);
         }
+        setLoading(false);
     };
-
 
     return (
         <Paper
-            key={index}
-            elevation={3}
-            className="p-4 mb-4 rounded-lg shadow-lg transform transition"
+            elevation={4}
+            className="p-4 mb-6 shadow-lg transition-transform hover:scale-[1.01]"
             style={{
-                background: '#f9f9f9', // Change the background color
-                border: '2px double #e0e0e0', // Add a border
-                textAlign: 'left', // Align text to the left
+                background: '#ffffff',
+                border: '2px solid #e3e3e3',
+                borderRadius: '12px',
+                textAlign: 'left',
             }}
         >
-            {
-                loading ? <CircularProgress style={{margin: "auto"}} /> : <>
-                    {
-                        !isEditing ? <>
-                            <Typography variant="h6" className="text-indigo-500 mb-2">
-                                Created at{' '}
-                                <span className="text-dark">
-                                    {formattedDate} at {formattedTime}
-                                </span>
+            {loading ? (
+                <div className="flex justify-center items-center h-32">
+                    <CircularProgress />
+                </div>
+            ) : (
+                <>
+                    {!isEditing ? (
+                        <>
+                            <Typography variant="subtitle2" className="text-gray-600 mb-1">
+                                Created at <span className="text-black font-semibold">{formattedDate} at {formattedTime}</span>
                             </Typography>
-                            <Typography variant="h5" className="text-blue-600 mb-2">
-                                {index + 1}. <span className="text-red-500">{elem.name}</span>
-                                <IconButton color="primary" onClick={() => downloadTextWithStyle(elem.name, elem.content, elem.url)}>
-                                    <CloudDownloadIcon />
-                                </IconButton>
+
+                            <Typography variant="h6" className="text-blue-700 mb-2">
+                                {index + 1}. <span className="text-red-500 font-semibold">{elem.name}</span>
+                                <Tooltip title="Download Text File">
+                                    <IconButton
+                                        sx={{ color: '#1976d2', ml: 1 }}
+                                        onClick={() => downloadTextWithStyle(elem.name, elem.content, elem.url)}
+                                    >
+                                        <CloudDownloadIcon />
+                                    </IconButton>
+                                </Tooltip>
                             </Typography>
+
                             {showFullContent ? (
-                                <Typography variant="body1" className="text-gray-700">
-                                    Detail: <div dangerouslySetInnerHTML={{__html: content}} />
+                                <Typography variant="body1" className="text-gray-800 mb-2">
+                                    <strong>Detail:</strong>
+                                    <div dangerouslySetInnerHTML={{ __html: formattedContent }} />
+                                    <Button size="small" onClick={toggleContent} sx={{ color: '#1976d2' }}>
+                                        Read less
+                                    </Button>
                                 </Typography>
                             ) : (
-                                <Typography variant="body1" className="text-gray-700">
-                                    Detail: {content.slice(0, 50)} {/* Show only the first 100 characters */}
-                                    {content.length > 50 && (
-                                        <button onClick={toggleContent} className="text-indigo-500 hover:underline">
-                                            ...Read more
-                                        </button>
+                                <Typography variant="body2" className="text-gray-800 mb-2">
+                                    <strong>Detail:</strong> {elem.content.slice(0, 100)}...
+                                    {elem.content.length > 100 && (
+                                        <Button size="small" onClick={toggleContent} sx={{ color: '#1976d2' }}>
+                                            Read more
+                                        </Button>
                                     )}
                                 </Typography>
                             )}
-                            {showFullContent && (
-                                <button onClick={toggleContent} className="text-indigo-500 hover:underline">
-                                    ...Read less
-                                </button>
-                            )}
-                            {
-                                elem.url ? <>
-                                    <div style={{position: 'relative'}}>
-                                        <img
-                                            src={elem.url}
-                                            alt={elem.name}
-                                            style={{maxWidth: '100%', maxHeight: '200px', marginTop: '10px'}}
-                                        />
 
+                            {elem.url && (
+                                <div className="relative mt-4">
+                                    <img
+                                        src={elem.url}
+                                        alt={elem.name}
+                                        style={{
+                                            width: '100%',
+                                            maxHeight: '200px',
+                                            objectFit: 'cover',
+                                            borderRadius: '8px'
+                                        }}
+                                    />
+                                    <Tooltip title="Download Image">
                                         <IconButton
                                             onClick={() => downloadImage(elem.url, elem.name)}
-                                            style={{
+                                            sx={{
                                                 position: 'absolute',
-                                                bottom: 2,
-                                                left: '10%',
-                                                transform: 'translateX(-50%)',
-                                                color: 'red',
+                                                bottom: 10,
+                                                left: 10,
+                                                backgroundColor: '#fff',
+                                                boxShadow: 1,
+                                                '&:hover': { backgroundColor: '#f5f5f5' }
                                             }}
                                         >
-                                            <CloudDownloadIcon />
+                                            <CloudDownloadIcon color="error" />
                                         </IconButton>
-
-                                    </div>
-                                </>
-                                    : <>
-
-                                    </>
-                            }
-                        </> : <>
+                                    </Tooltip>
+                                </div>
+                            )}
+                        </>
+                    ) : (
+                        <>
                             <TextField
                                 variant="outlined"
                                 fullWidth
-                                defaultValue={elem.name}
+                                label="Content Title"
+                                className="mb-3"
+                                value={contentName}
                                 onChange={(e) => setContentName(e.target.value)}
                             />
                             <TextField
                                 variant="outlined"
                                 fullWidth
-                                defaultValue={content}
+                                multiline
+                                rows={4}
+                                label="Content Detail"
+                                value={contentDetail}
                                 onChange={(e) => setContentDetail(e.target.value)}
                             />
                         </>
-                    }
+                    )}
 
                     {isAdmin && (
-                        <div className="mt-3">
-                            <>
-                                { /* If editing is not in progress, show the Edit button */}
-                                {!isEditing && (
-                                    <>
-                                        <IconButton color="primary" onClick={() => handleUpdate(elem._id)}>
+                        <div className="mt-4 flex gap-2">
+                            {!isEditing ? (
+                                <>
+                                    <Tooltip title="Edit">
+                                        <IconButton sx={{ color: '#0288d1' }} onClick={() => handleUpdate(elem._id)}>
                                             <Edit />
                                         </IconButton>
-                                        <IconButton color="error" onClick={() => handleDelete(elem._id)}>
+                                    </Tooltip>
+                                    <Tooltip title="Delete">
+                                        <IconButton sx={{ color: '#d32f2f' }} onClick={() => handleDelete(elem._id)}>
                                             <Delete />
                                         </IconButton>
-                                    </>
-                                )}
-                                { /* If editing is in progress, show the Done button */}
-                                {isEditing && (
-                                    <>
-                                        <IconButton color="success" onClick={() => handleDone(elem._id)}>
-                                            <DoneIcon />
-                                        </IconButton>
-                                    </>
-                                )}
-                            </>
+                                    </Tooltip>
+                                </>
+                            ) : (
+                                <Tooltip title="Save Changes">
+                                    <IconButton sx={{ color: '#2e7d32' }} onClick={() => handleDone(elem._id)}>
+                                        <DoneIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            )}
                         </div>
                     )}
                 </>
-
-            }
-
+            )}
         </Paper>
     );
 };
